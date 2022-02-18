@@ -19,11 +19,5 @@ namespace Lms.Models
 
         public List<Course> Courses { get; set; }
 
-        //[NotMapped]
-        //public virtual List<Course> ActiveCourseIds { get; set; }
-
-        //[NotMapped]
-        //public virtual List<Course> InactiveCourseIds { get; set; }
-
     }
 }

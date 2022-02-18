@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Lms.Daos
 {
-    public class StudentContext : DbContext
+    public class LmsContext : DbContext
     {
-        public StudentContext(DbContextOptions<StudentContext> options) : base(options) { }
+        public LmsContext(DbContextOptions<LmsContext> options) : base(options) { }
 
         public DbSet<Student> Students { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Course> Courses { get; set; }
     }
 }

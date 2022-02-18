@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class Teacher
+    public class StudentPatch
     {
-        [Key]
-        [Required]
-        [Display(Name = "Id")]
+
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
+        [Display(Name = "Courses")]
         public List<Course> Courses { get; set; }
     }
 }

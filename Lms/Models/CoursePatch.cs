@@ -1,27 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class Course
+    public class CoursePatch
     {
-
-        [Key]
-        [Required]
-        [Display(Name = "ID")]
-        public int Id { get; set; }
-
-        [Required]
-        [Display(Name="name")]
+        [Display(Name = "name")]
         public string Name { get; set; }
 
-        [Display(Name = "teacher")]
         public string TeacherId { get; set; }
 
+        [Required]
         public bool Active { get; set; }
 
         //public DateTime starttime = new DateTime();

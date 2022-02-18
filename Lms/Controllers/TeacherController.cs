@@ -15,15 +15,15 @@ namespace Lms.Controllers
     [Produces("application/json")]
     public class TeacherController : ControllerBase
     {
-        private readonly TeacherContext _context;
+        private readonly LmsContext _context;
 
-        public TeacherController(TeacherContext context)
+        public TeacherController(LmsContext context)
         {
             _context = context;
 
             if (_context.Teachers.Any()) return;
 
-            TeacherSeed.InitData(context);
+            LmsSeed.InitData(context);
         }
 
         [HttpGet]
@@ -36,5 +36,114 @@ namespace Lms.Controllers
             return Ok(result
               .OrderBy(p => p.Id));
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Teacher> GetTeacherById([FromRoute] int id)
+        {
+            var teacher = _context.Teachers
+                .FirstOrDefault(p => p.Id.Equals(id));
+
+            if (teacher == null) return NotFound();
+
+            return Ok(teacher);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Teacher> PostTeacher([FromBody] Teacher teacher)
+        {
+            try
+            {
+                _context.Teachers.Add(teacher);
+                _context.SaveChanges();
+
+                return new CreatedResult($"/teacher/{teacher.Id}", teacher);
+            }
+            catch (Exception e)
+            {
+                // Typically an error log is produced here
+                return ValidationProblem(e.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Teacher> PutTeacher([FromRoute] int id, [FromBody] Teacher newTeacher)
+        {
+            try
+            {
+                var teacherList = _context.Teachers as IQueryable<Teacher>;
+                var teacher = teacherList.First(p => p.Id.Equals(id));
+
+                _context.Teachers.Remove(teacher);
+                _context.Teachers.Add(newTeacher);
+                _context.SaveChanges();
+
+                return new CreatedResult($"/teacher/{newTeacher.Id}", newTeacher);
+            }
+            catch (Exception e)
+            {
+                // Typically an error log is produced here
+                return ValidationProblem(e.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Teacher> PatchTeacher([FromRoute] int id, [FromBody] TeacherPatch newTeacher)
+        {
+            try
+            {
+                var teacherList = _context.Teachers as IQueryable<Teacher>;
+                var teacher = teacherList.First(p => p.Id.Equals(id));
+
+                teacher.Name = newTeacher.Name ?? teacher.Name;
+                teacher.Courses = newTeacher.Courses ?? teacher.Courses;
+
+                _context.Teachers.Update(teacher);
+                _context.SaveChanges();
+
+                return new CreatedResult($"/teacher/{teacher.Id}", teacher);
+            }
+            catch (Exception e)
+            {
+                // Typically an error log is produced here
+                return ValidationProblem(e.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Teacher> DeleteTeacher([FromRoute] int id)
+        {
+            try
+            {
+                var teacherList = _context.Teachers as IQueryable<Teacher>;
+                var teacher = teacherList.First(p => p.Id.Equals(id));
+
+                _context.Teachers.Remove(teacher);
+                _context.SaveChanges();
+
+                return new CreatedResult($"/teacher/{teacher.Id}", teacher);
+            }
+            catch (Exception e)
+            {
+                // Typically an error log is produced here
+                return ValidationProblem(e.Message);
+            }
+        }
+
     }
 }
+

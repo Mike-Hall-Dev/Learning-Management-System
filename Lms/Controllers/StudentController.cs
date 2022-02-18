@@ -15,15 +15,15 @@ namespace Lms.Controllers
     [Produces("application/json")]
     public class StudentController : ControllerBase
     {
-        private readonly StudentContext _context;
+        private readonly LmsContext _context;
 
-        public StudentController(StudentContext context)
+        public StudentController(LmsContext context)
         {
             _context = context;
 
             if (_context.Students.Any()) return;
 
-            StudentSeed.InitData(context);
+            LmsSeed.InitData(context);
         }
 
         [HttpGet]
@@ -37,7 +37,21 @@ namespace Lms.Controllers
               .OrderBy(p => p.Id));
         }
 
-        [HttpPost]
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Student> GetStudentByIdNumber([FromRoute] int id)
+        {
+            var student = _context.Students
+                .FirstOrDefault(p => p.Id.Equals(id));
+
+            if (student == null) return NotFound();
+
+            return Ok(student);
+        }
+
+            [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Student> PostStudent([FromBody] Student student)
@@ -80,7 +94,34 @@ namespace Lms.Controllers
             }
         }
 
-        //Still need patch endpoint.
+        [HttpPatch]
+        [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Student> PatchStudent([FromRoute] int id, [FromBody] StudentPatch newStudent)
+        {
+            try
+            {
+                var studentList = _context.Students as IQueryable<Student>;
+                var student = studentList.First(p => p.Id.Equals(id));
+
+                //if (newStudent.Id != 0) {student.Id = newStudent.Id;};
+
+                student.Name = newStudent.Name ?? student.Name;
+                student.Courses = newStudent.Courses ?? student.Courses;
+
+                _context.Students.Update(student);
+                _context.SaveChanges();
+
+                return new CreatedResult($"/student/{student.Id}", newStudent);
+            }
+            catch (Exception e)
+            {
+                // Typically an error log is produced here
+                return ValidationProblem(e.Message);
+            }
+        }
+
 
         [HttpDelete]
         [Route("{id}")]

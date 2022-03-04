@@ -20,7 +20,7 @@ namespace Lms.Models
         public string Name { get; set; }
 
         [Display(Name = "teacher")]
-        public int TeacherId { get; set; }
+        public string TeacherId { get; set; }
 
         public bool Active { get; set; }
 

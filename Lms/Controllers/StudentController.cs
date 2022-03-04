@@ -46,7 +46,7 @@ namespace Lms.Controllers
         public ActionResult<Student> GetStudentByIdNumber([FromRoute] int id)
         {
 
-            var student = _context.Teachers.Include("Courses").FirstOrDefault(p => p.Id.Equals(id));
+            var student = _context.Students.Include("Courses").FirstOrDefault(p => p.Id.Equals(id));
 
             //var student = _context.Students
                 //.FirstOrDefault(p => p.Id.Equals(id));

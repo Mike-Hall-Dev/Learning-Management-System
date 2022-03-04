@@ -16,12 +16,8 @@ namespace Lms.Models
             Teacher teacher1 = new Teacher() { Id = 1, Name = "Stacey" };
             Teacher teacher2 = new Teacher() { Id = 2, Name = "Blacey" };
 
-            Course course1 = new Course() { Id = 1, Name = "Learning 101", TeacherId = "1" };
-            Course course2 = new Course() { Id = 2, Name = "Learning 202", TeacherId = "2", Active = true};
-
-            teacher1.Courses = new List<Course>() { course1 };
-            teacher2.Courses = new List<Course>() { course2 };
-
+            Course course1 = new Course() { Id = 1, Name = "Learning 101", TeacherId = 1 };
+            Course course2 = new Course() { Id = 2, Name = "Learning 202", TeacherId = 1, Active = true};
 
             context.Add(student1);
             context.Add(student2);

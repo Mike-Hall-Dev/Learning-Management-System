@@ -98,7 +98,7 @@ namespace Lms.Controllers
         [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Course> PatchCourse([FromRoute] string id, [FromBody] CoursePatch newCourse)
+        public ActionResult<Course> PatchCourse([FromRoute] int id, [FromBody] CoursePatch newCourse)
         {
             try
             {
@@ -106,8 +106,13 @@ namespace Lms.Controllers
                 var course = courseList.First(p => p.Id.Equals(id));
 
                 course.Name = newCourse.Name ?? course.Name;
-                course.TeacherId = newCourse.TeacherId ?? course.TeacherId;
+                //course.TeacherId = newCourse.TeacherId ?? course.TeacherId;
                 course.Active = newCourse.Active;
+
+                if (newCourse.TeacherId != 0)
+                {
+                    course.TeacherId = newCourse.TeacherId;
+                }
 
 
                 _context.Courses.Update(course);

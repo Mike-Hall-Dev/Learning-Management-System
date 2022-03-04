@@ -11,7 +11,7 @@ namespace Lms.Models
         [Display(Name = "name")]
         public string Name { get; set; }
 
-        public string TeacherId { get; set; }
+        public int TeacherId { get; set; }
 
         [Required]
         public bool Active { get; set; }

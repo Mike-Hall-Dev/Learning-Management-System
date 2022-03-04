@@ -2,10 +2,12 @@
 using Lms.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+//using System.Data.EntityFrameworkCore;
 
 namespace Lms.Controllers
 {
@@ -31,7 +33,7 @@ namespace Lms.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IQueryable<Teacher>> GetTeachers()
         {
-            var result = _context.Teachers as IQueryable<Teacher>;
+            var result = _context.Teachers.Include("Courses");
 
             return Ok(result
               .OrderBy(p => p.Id));
@@ -43,9 +45,9 @@ namespace Lms.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Teacher> GetTeacherById([FromRoute] int id)
         {
-            var teacher = _context.Teachers
-                .FirstOrDefault(p => p.Id.Equals(id));
-
+            var teacher = _context.Teachers.Include("Courses").FirstOrDefault(p => p.Id.Equals(id));
+           // var courses = _context.Courses.Where(c => c.TeacherId == id.ToString()).ToList();
+            
             if (teacher == null) return NotFound();
 
             return Ok(teacher);

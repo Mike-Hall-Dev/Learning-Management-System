@@ -30,7 +30,6 @@ namespace Lms
             services.AddControllers();
             services.AddDbContext<LmsContext>(opt => opt.UseInMemoryDatabase("Lms"));
             services.AddApiVersioning(opt => opt.ReportApiVersions = true);
-            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Products",

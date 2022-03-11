@@ -32,8 +32,13 @@ namespace Lms
             services.AddApiVersioning(opt => opt.ReportApiVersions = true);
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
             {
+<<<<<<< HEAD
                 Title = "Learning Mangement System",
                 Description = "Easily manage your courses, students, and teachers!",
+=======
+                Title = "Learning Management System",
+                Description = "The ultimate tool for all your learning needs",
+>>>>>>> 001f0db64857a781cda8f85b2d33cff7bcead036
                 Version = "v1"
             }));
         }

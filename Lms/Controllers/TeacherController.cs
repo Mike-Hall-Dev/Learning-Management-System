@@ -33,7 +33,7 @@ namespace Lms.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IQueryable<Teacher>> GetTeachers()
         {
-            var result = _context.Teachers.Include("Courses");
+            var result = _context.Teachers as IQueryable<Teacher>;
 
             return Ok(result
               .OrderBy(p => p.Id));
@@ -45,7 +45,7 @@ namespace Lms.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Teacher> GetTeacherById([FromRoute] int id)
         {
-            var teacher = _context.Teachers.Include("Courses").FirstOrDefault(p => p.Id.Equals(id));
+            var teacher = _context.Teachers.FirstOrDefault(p => p.Id.Equals(id));
            // var courses = _context.Courses.Where(c => c.TeacherId == id.ToString()).ToList();
             
             if (teacher == null) return NotFound();
@@ -108,7 +108,7 @@ namespace Lms.Controllers
                 var teacher = teacherList.First(p => p.Id.Equals(id));
 
                 teacher.Name = newTeacher.Name ?? teacher.Name;
-                teacher.Courses = newTeacher.Courses ?? teacher.Courses;
+                //teacher.Courses = newTeacher.Courses ?? teacher.Courses;
 
                 _context.Teachers.Update(teacher);
                 _context.SaveChanges();

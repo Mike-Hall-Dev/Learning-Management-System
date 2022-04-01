@@ -33,7 +33,7 @@ namespace Lms.Controllers
         public ActionResult<IQueryable<Student>> GetStudents()
         {
 
-            var result = _context.Students.Include("Courses");
+            var result = _context.Students as IQueryable<Student>;
 
             return Ok(result
               .OrderBy(p => p.Id));
@@ -46,7 +46,7 @@ namespace Lms.Controllers
         public ActionResult<Student> GetStudentByIdNumber([FromRoute] int id)
         {
 
-            var student = _context.Students.Include("Courses").FirstOrDefault(p => p.Id.Equals(id));
+            var student = _context.Students.FirstOrDefault(p => p.Id.Equals(id));
 
             //var student = _context.Students
                 //.FirstOrDefault(p => p.Id.Equals(id));
@@ -113,7 +113,7 @@ namespace Lms.Controllers
                 //if (newStudent.Id != 0) {student.Id = newStudent.Id;};
 
                 student.Name = newStudent.Name ?? student.Name;
-                student.Courses = newStudent.Courses ?? student.Courses;
+                //student.Courses = newStudent.Courses ?? student.Courses;
 
                 _context.Students.Update(student);
                 _context.SaveChanges();

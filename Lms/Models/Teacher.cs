@@ -18,6 +18,6 @@ namespace Lms.Models
         [Display(Name = "Name")]
         public string Name { get; set; }
 
-        public List<Course> Courses { get; set; }
+        //public List<Course> Courses { get; set; }
     }
 }

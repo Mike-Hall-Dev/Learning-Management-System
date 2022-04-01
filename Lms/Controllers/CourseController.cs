@@ -51,46 +51,6 @@ namespace Lms.Controllers
             return Ok(course);
         }
 
-        [HttpGet]
-        [Route("allactive")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ActiveCourse> GetAllActiveCourses()
-        {
-            var result = _context.ActiveCourses as IQueryable<ActiveCourse>;
-
-            if (result == null) return NotFound();
-
-            return Ok(result
-              .OrderBy(p => p.CourseId));
-        }
-
-        [HttpGet]
-        [Route("allinactive")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<InactiveCourse> GetAllInactiveCourses()
-        {
-            var result = _context.inactiveCourses as IQueryable<InactiveCourse>;
-
-            if (result == null) return NotFound();
-
-            return Ok(result
-              .OrderBy(p => p.CourseId));
-        }
-
-        [HttpGet]
-        [Route("StudentId")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ActiveCourse> GetCoursesByStudentIdNumber(int studentid)
-        {
-            var courses = _context.ActiveCourses.FirstOrDefault(p => p.StudentId.Equals(studentid));
-
-            if (courses == null) return NotFound();
-
-            return Ok(courses);
-        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -103,6 +63,7 @@ namespace Lms.Controllers
                 _context.SaveChanges();
 
                 return new CreatedResult($"/course/{course.Id}", course);
+
             }
             catch (Exception e)
             {

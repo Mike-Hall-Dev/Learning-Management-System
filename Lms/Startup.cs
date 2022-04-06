@@ -28,8 +28,11 @@ namespace Lms
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<LmsContext>(opt => opt.UseInMemoryDatabase("Lms"));
-            services.AddApiVersioning(opt => opt.ReportApiVersions = true);
+            //services.AddDbContext<LmsContext>(opt => opt.UseInMemoryDatabase("Lms"));
+            //services.AddApiVersioning(opt => opt.ReportApiVersions = true);
+            services.AddSingleton<DapperContext>();
+            services.AddScoped<LmsDao>();
+
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
             {
 
@@ -48,6 +51,7 @@ namespace Lms
             }
 
             app.UseSwagger();
+            
             app.UseSwaggerUI(opt => opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Products v1"));
 
             app.UseRouting();

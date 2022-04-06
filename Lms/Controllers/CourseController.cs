@@ -1,6 +1,5 @@
 ﻿using Lms.Daos;
 using Lms.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,142 +9,92 @@ using System.Threading.Tasks;
 namespace Lms.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/[controller]")]
-    [Produces("application/json")]
     public class CourseController : ControllerBase
     {
-        private readonly LmsContext _context;
+        private readonly LmsDao _lmsDao;
 
-        public CourseController(LmsContext context)
+        public CourseController(LmsDao lmsDao)
         {
-            _context = context;
-
-            if (_context.Courses.Any()) return;
-
-            LmsSeed.InitData(context);
+            _lmsDao = lmsDao;
         }
 
         [HttpGet]
-        [Route("")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IQueryable<Course>> GetCourses()
+        [Route("courses")]
+        public async Task<IActionResult> GetAllCourses()
         {
-            var result = _context.Courses as IQueryable<Course>;
-
-            return Ok(result
-              .OrderBy(p => p.Id));
+            try
+            {
+                var courses = await _lmsDao.GetAllCourses();
+                return Ok(courses);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Course> GetCourseByIdNumber([FromRoute] int id)
-        {
-            var course = _context.Courses
-                .FirstOrDefault(p => p.Id.Equals(id));
-
-            if (course == null) return NotFound();
-
-            return Ok(course);
-        }
-
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Course> PostCourse([FromBody] Course course)
+        [Route("courses/{id}")]
+        public async Task<IActionResult> GetCourseById([FromRoute] int id)
         {
             try
             {
-                _context.Courses.Add(course);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/course/{course.Id}", course);
+                var course = await _lmsDao.GetCourseById(id);
+                if (course == null)
+                {
+                    return StatusCode(404);
+                }
+                return Ok(course);
 
             }
             catch (Exception e)
             {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
-            }
-        }
-
-        [HttpPut]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Course> PutCourse([FromRoute] int id, [FromBody] Course newCourse)
-        {
-            try
-            {
-                var courseList = _context.Courses as IQueryable<Course>;
-                var course = courseList.First(p => p.Id.Equals(id));
-
-                _context.Courses.Remove(course);
-                _context.Courses.Add(newCourse);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/course/{newCourse.Id}", newCourse);
-            }
-            catch (Exception e)
-            {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
-            }
-        }
-
-        [HttpPatch]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Course> PatchCourse([FromRoute] string id, [FromBody] CoursePatch newCourse)
-        {
-            try
-            {
-                var courseList = _context.Courses as IQueryable<Course>;
-                var course = courseList.First(p => p.Id.Equals(id));
-
-                course.Name = newCourse.Name ?? course.Name;
-                course.TeacherId = newCourse.TeacherId ?? course.TeacherId;
-                course.Active = newCourse.Active;
-
-
-                _context.Courses.Update(course);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/course/{course.Id}", course);
-            }
-            catch (Exception e)
-            {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Course> DeleteCourse([FromRoute] int id)
+        [Route("course/{id}")]
+        public async Task<IActionResult> DeleteCourseById([FromRoute] int id)
         {
             try
             {
-                var courseList = _context.Courses as IQueryable<Course>;
-                var course = courseList.First(p => p.Id.Equals(id));
+                var course = GetCourseById(id);
+                if (course == null)
+                {
+                    return StatusCode(404);
+                }
 
-                _context.Courses.Remove(course);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/course/{course.Id}", course);
+                await _lmsDao.DeleteCourseById(id);
+                return StatusCode(200);
             }
             catch (Exception e)
             {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
+        [HttpPut]
+        [Route("course")]
+        public async Task<IActionResult> UpdateCourseById([FromBody] Course updateRequest)
+        {
+            try
+            {
+                var course = await _lmsDao.GetCourseById(updateRequest.Id);
+                if (course == null)
+                {
+                    return StatusCode(404);
+                }
+
+                await _lmsDao.UpdateCourseById(updateRequest);
+                return StatusCode(200);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+        }
     }
 }

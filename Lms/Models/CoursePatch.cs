@@ -16,6 +16,5 @@ namespace Lms.Models
         [Required]
         public bool Active { get; set; }
 
-        //public DateTime starttime = new DateTime();
     }
 }

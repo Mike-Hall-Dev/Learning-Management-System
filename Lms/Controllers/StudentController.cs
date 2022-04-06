@@ -1,8 +1,6 @@
 ﻿using Lms.Daos;
 using Lms.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,145 +9,107 @@ using System.Threading.Tasks;
 namespace Lms.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/[controller]")]
-    [Produces("application/json")]
     public class StudentController : ControllerBase
     {
-        private readonly LmsContext _context;
+        private readonly LmsDao _lmsDao;
 
-        public StudentController(LmsContext context)
+        public StudentController(LmsDao lmsDao)
         {
-            _context = context;
-
-            if (_context.Students.Any()) return;
-
-            LmsSeed.InitData(context);
+            _lmsDao = lmsDao;
         }
 
         [HttpGet]
-        [Route("")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IQueryable<Student>> GetStudents()
-        {
-
-            var result = _context.Students as IQueryable<Student>;
-
-            return Ok(result
-              .OrderBy(p => p.Id));
-        }
-
-        [HttpGet]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Student> GetStudentByIdNumber([FromRoute] int id)
-        {
-
-            var student = _context.Students.FirstOrDefault(p => p.Id.Equals(id));
-
-            //var student = _context.Students
-                //.FirstOrDefault(p => p.Id.Equals(id));
-
-            if (student == null) return NotFound();
-
-            return Ok(student);
-        }
-
-            [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Student> PostStudent([FromBody] Student student)
+        [Route("students")]
+        public async Task<IActionResult> GetAllStudents()
         {
             try
             {
-                _context.Students.Add(student);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/students/{student.Id}", student);
+                var students = await _lmsDao.GetAllStudents();
+                return Ok(students);
             }
             catch (Exception e)
             {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("student/{id}")]
+        public async Task<IActionResult> GetStudentById([FromRoute] int id)
+        {
+            try
+            {
+                var student = await _lmsDao.GetStudentById(id);
+                if (student == null)
+                {
+                    return StatusCode(404);
+                }
+                return Ok(student);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("student")]
+        public async Task<IActionResult> CreateNewStudent([FromBody]Student newStudent)
+        {
+            try
+            {
+                await _lmsDao.CreateStudent(newStudent);
+                return Ok(newStudent);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("student/{id}")]
+        public async Task<IActionResult> DeleteStudentById([FromRoute] int id)
+        {
+            try
+            {
+                var student = GetStudentById(id);
+                if (student == null)
+                {
+                    return StatusCode(404);
+                }
+
+                await _lmsDao.DeleteStudentById(id);
+                return StatusCode(200);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
             }
         }
 
         [HttpPut]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Student> PutStudent([FromRoute] int id, [FromBody] Student newStudent)
+        [Route("student")]
+        public async Task<IActionResult> UpdateStudentById([FromBody] Student updateRequest)
         {
             try
             {
-                var studentlist = _context.Students as IQueryable<Student>;
-                var student = studentlist.First(p => p.Id.Equals(id));
+                var student = await _lmsDao.GetStudentById(updateRequest.Id);
+                if (student == null)
+                {
+                    return StatusCode(404);
+                }
 
-                _context.Students.Remove(student);
-                _context.Students.Add(newStudent);
-                _context.SaveChanges();
+                await _lmsDao.UpdateStudentById(updateRequest);
+                return StatusCode(200);
 
-                return new CreatedResult($"/student/{newStudent.Id}", newStudent);
             }
             catch (Exception e)
             {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
+                return StatusCode(500, e.Message);
             }
+
         }
-
-        [HttpPatch]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Student> PatchStudent([FromRoute] int id, [FromBody] StudentPatch newStudent)
-        {
-            try
-            {
-                var studentList = _context.Students as IQueryable<Student>;
-                var student = studentList.First(p => p.Id.Equals(id));
-
-                //if (newStudent.Id != 0) {student.Id = newStudent.Id;};
-
-                student.Name = newStudent.Name ?? student.Name;
-                //student.Courses = newStudent.Courses ?? student.Courses;
-
-                _context.Students.Update(student);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/student/{student.Id}", newStudent);
-            }
-            catch (Exception e)
-            {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
-            }
-        }
-
-
-        [HttpDelete]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Student> DeleteStudent([FromRoute] int id)
-        {
-            try
-            {
-                var studentList = _context.Students as IQueryable<Student>;
-                var student = studentList.First(p => p.Id.Equals(id));
-
-                _context.Students.Remove(student);
-                _context.SaveChanges();
-
-                return new CreatedResult($"/students/{student.Id}", student);
-            }
-            catch (Exception e)
-            {
-                // Typically an error log is produced here
-                return ValidationProblem(e.Message);
-            }
-        }
-
     }
 }

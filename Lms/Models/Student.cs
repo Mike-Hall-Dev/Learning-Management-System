@@ -10,7 +10,7 @@ namespace Lms.Models
     public class Student
     {
         [Key]
-        [Required]
+        //[Required]
         [Display(Name = "ID")]
         public int Id { get; set; }
 

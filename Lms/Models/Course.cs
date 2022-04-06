@@ -16,14 +16,12 @@ namespace Lms.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name="name")]
+        [Display(Name="Name")]
         public string Name { get; set; }
 
-        [Display(Name = "teacher")]
+        [Display(Name = "Teacher")]
         public string TeacherId { get; set; }
 
-        public bool Active { get; set; }
 
-        //public DateTime starttime = new DateTime();
     }
 }

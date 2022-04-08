@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class Student
+    public class CoursePost
     {
-        [Key]
+        [Display(Name = "name")]
         [Required]
-        [Display(Name = "ID")]
-        public int Id { get; set; }
-
-        [Required]
-        [Display(Name = "Name")]
         public string Name { get; set; }
+
+        public string TeacherId { get; set; }
 
 
     }

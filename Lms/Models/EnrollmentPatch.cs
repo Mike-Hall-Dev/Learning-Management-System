@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class TeacherPatch
+    public class EnrollmentPatch
     {
-        [Display(Name = "Name")]
-        public string Name { get; set; }
-
-        public List<Course> Courses { get; set; }
+        [Display(Name = "Active")]
+        public bool Active { get; set; }
     }
 }
-

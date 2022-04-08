@@ -11,20 +11,20 @@ namespace Lms.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
-        private readonly LmsDao _lmsDao;
+        private readonly CourseDao _courseDao;
 
-        public CourseController(LmsDao lmsDao)
+        public CourseController(CourseDao courseDao)
         {
-            _lmsDao = lmsDao;
+            _courseDao = courseDao;
         }
 
         [HttpGet]
-        [Route("courses")]
+        [Route("course")]
         public async Task<IActionResult> GetAllCourses()
         {
             try
             {
-                var courses = await _lmsDao.GetAllCourses();
+                var courses = await _courseDao.GetAllCourses();
                 return Ok(courses);
             }
             catch (Exception e)
@@ -34,18 +34,53 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("courses/{id}")]
+        [Route("course/{id}")]
         public async Task<IActionResult> GetCourseById([FromRoute] int id)
         {
             try
             {
-                var course = await _lmsDao.GetCourseById(id);
+                var course = await _courseDao.GetCourseById(id);
                 if (course == null)
                 {
                     return StatusCode(404);
                 }
                 return Ok(course);
 
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+        // BUGGED
+        //[HttpGet]
+        //[Route("course/{id}")]
+        //public async Task<IActionResult> GetClassRoster([FromRoute] int id)
+        //{
+        //    try
+        //    {
+        //        var roster = await _courseDao.GetClassRosterById(id);
+        //        //if (course == null)
+        //        //{
+        //        //    return StatusCode(404);
+        //        //}
+        //        return Ok(roster);
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return StatusCode(500, e.Message);
+        //    }
+        //}
+
+        [HttpPost]
+        [Route("course")]
+        public async Task<IActionResult> CreateNewCourse([FromBody] CoursePost newCourse)
+        {
+            try
+            {
+                await _courseDao.CreateCourse(newCourse);
+                return Ok(newCourse);
             }
             catch (Exception e)
             {
@@ -65,7 +100,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _lmsDao.DeleteCourseById(id);
+                await _courseDao.DeleteCourseById(id);
                 return StatusCode(200);
             }
             catch (Exception e)
@@ -80,13 +115,13 @@ namespace Lms.Controllers
         {
             try
             {
-                var course = await _lmsDao.GetCourseById(updateRequest.Id);
+                var course = await _courseDao.GetCourseById(updateRequest.Id);
                 if (course == null)
                 {
                     return StatusCode(404);
                 }
 
-                await _lmsDao.UpdateCourseById(updateRequest);
+                await _courseDao.UpdateCourseById(updateRequest);
                 return StatusCode(200);
 
             }

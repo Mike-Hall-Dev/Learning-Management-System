@@ -31,7 +31,10 @@ namespace Lms
             //services.AddDbContext<LmsContext>(opt => opt.UseInMemoryDatabase("Lms"));
             //services.AddApiVersioning(opt => opt.ReportApiVersions = true);
             services.AddSingleton<DapperContext>();
-            services.AddScoped<LmsDao>();
+            services.AddScoped<StudentDao>();
+            services.AddScoped<CourseDao>();
+            services.AddScoped<TeacherDao>();
+            services.AddScoped<EnrollmentDao>();
 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
             {

@@ -11,19 +11,19 @@ namespace Lms.Controllers
     [ApiController]
     public class TeacherController : ControllerBase
     {
-        private readonly LmsDao _lmsDao;
-        public TeacherController(LmsDao lmsdao)
+        private readonly TeacherDao _teacherDao;
+        public TeacherController(TeacherDao teacherDao)
         {
-            _lmsDao = lmsdao;
+            _teacherDao = teacherDao;
         }
 
         [HttpGet]
-        [Route("teachers")]
+        [Route("teacher")]
         public async Task<IActionResult> GetAllTeachers()
         {
             try
             {
-                var teachers = await _lmsDao.GetAllTeachers();
+                var teachers = await _teacherDao.GetAllTeachers();
                 return Ok(teachers);
             }
             catch (Exception e)
@@ -33,12 +33,12 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("teachers/{id}")]
+        [Route("teacher/{id}")]
         public async Task<IActionResult> GetTeacherById([FromRoute] int id)
         {
             try
             {
-                var teacher = await _lmsDao.GetTeacherById(id);
+                var teacher = await _teacherDao.GetTeacherById(id);
                 if (teacher == null)
                 {
                     return StatusCode(404);
@@ -52,8 +52,23 @@ namespace Lms.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("teacher")]
+        public async Task<IActionResult> CreateNewTeacher([FromBody] TeacherPost newTeacher)
+        {
+            try
+            {
+                await _teacherDao.CreateTeacher(newTeacher);
+                return Ok(newTeacher);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
         [HttpDelete]
-        [Route("teachers/{id}")]
+        [Route("teacher/{id}")]
         public async Task<IActionResult> DeleteTeacherById([FromRoute] int id)
         {
             try
@@ -64,7 +79,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _lmsDao.DeleteTeacherById(id);
+                await _teacherDao.DeleteTeacherById(id);
                 return StatusCode(200);
             }
             catch (Exception e)
@@ -79,13 +94,13 @@ namespace Lms.Controllers
         {
             try
             {
-                var teacher = await _lmsDao.GetTeacherById(updateRequest.Id);
+                var teacher = await _teacherDao.GetTeacherById(updateRequest.Id);
                 if (teacher == null)
                 {
                     return StatusCode(404);
                 }
 
-                await _lmsDao.UpdateTeacherById(updateRequest);
+                await _teacherDao.UpdateTeacherById(updateRequest);
                 return StatusCode(200);
 
             }

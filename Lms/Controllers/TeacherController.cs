@@ -73,7 +73,7 @@ namespace Lms.Controllers
         {
             try
             {
-                var teacher = GetTeacherById(id);
+                var teacher = await _teacherDao.GetTeacherById(id);
                 if (teacher == null)
                 {
                     return StatusCode(404);

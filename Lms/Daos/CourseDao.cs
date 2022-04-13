@@ -66,15 +66,20 @@ namespace Lms.Daos
             }
         }
 
-        //public async Task<IEnumerable<Student>> GetClassRosterById(int id)
-        //{
-        //    var query = $"SELECT  Student.Id, Student.[Name] FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student ON Student.Id=Enrollment.StudentId WHERE Course.Id={id}";
-        //    using (var connection = _context.CreateConnection())
-        //    {
-        //        var roster = await connection.QueryAsync<Student>(query);
+        public async Task<IEnumerable<Student>> GetClassRosterById(int id)
+        {
+            var query = $"SELECT  Student.Id, Student.[Name] FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student ON Student.Id=Enrollment.StudentId WHERE Course.Id={id}";
+            using (var connection = _context.CreateConnection())
+            {
+                var roster = await connection.QueryAsync<Student>(query);
 
-        //        return roster.ToList();
-        //    }
-        //}
+                if (roster.Count() == 0)
+                {
+                    return null;
+                }
+
+                return roster.ToList();
+            }
+        }
     }
 }

@@ -53,26 +53,26 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-        // BUGGED
-        //[HttpGet]
-        //[Route("course/{id}")]
-        //public async Task<IActionResult> GetClassRoster([FromRoute] int id)
-        //{
-        //    try
-        //    {
-        //        var roster = await _courseDao.GetClassRosterById(id);
-        //        //if (course == null)
-        //        //{
-        //        //    return StatusCode(404);
-        //        //}
-        //        return Ok(roster);
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return StatusCode(500, e.Message);
-        //    }
-        //}
+       [HttpGet]
+       [Route("courses/{id}/roster")]
+        public async Task<IActionResult> GetClassRoster([FromRoute] int id)
+        {
+            try
+            {
+                var roster = await _courseDao.GetClassRosterById(id);
+                if (roster == null)
+                {
+                    return StatusCode(404);
+                }
+                return Ok(roster);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
 
         [HttpPost]
         [Route("courses")]
@@ -95,7 +95,7 @@ namespace Lms.Controllers
         {
             try
             {
-                var course = GetCourseById(id);
+                var course = await _courseDao.GetCourseById(id);
 
                 if (course == null)
                 {

@@ -97,7 +97,7 @@ namespace Lms.Controllers
         {
             try
             {
-                var student = GetStudentById(id);
+                var student = await _studentDao.GetStudentById(id);
                 if (student == null)
                 {
                     return StatusCode(404);

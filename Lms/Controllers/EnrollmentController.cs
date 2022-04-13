@@ -62,7 +62,7 @@ namespace Lms.Controllers
         {
             try
             {
-                var enrollment = _enrollmentDao.GetEnrollmentById(id);
+                var enrollment = await _enrollmentDao.GetEnrollmentById(id);
 
                 if (enrollment == null)
                 {

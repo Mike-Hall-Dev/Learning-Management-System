@@ -19,7 +19,7 @@ namespace Lms.Controllers
         }
 
         [HttpPost]
-        [Route("enrollment")]
+        [Route("enrollments")]
         public async Task<IActionResult> CreateNewEnrollment(EnrollmentPost newEnrollment)
         {
             try
@@ -34,7 +34,7 @@ namespace Lms.Controllers
         }
 
         [HttpPatch]
-        [Route("enrollment/{id}")]
+        [Route("enrollments/{id}")]
         public async Task<IActionResult> UpdateEnrollmentActiveStatus(EnrollmentPatch updateRequest, [FromRoute] int id)
         {
             try
@@ -57,12 +57,13 @@ namespace Lms.Controllers
         }
 
         [HttpDelete]
-        [Route("enrollment/{id}")]
+        [Route("enrollments/{id}")]
         public async Task<IActionResult> DeleteEnrollmentById([FromRoute] int id)
         {
             try
             {
                 var enrollment = _enrollmentDao.GetEnrollmentById(id);
+
                 if (enrollment == null)
                 {
                     return StatusCode(404);

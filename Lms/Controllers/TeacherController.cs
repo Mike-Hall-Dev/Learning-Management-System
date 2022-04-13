@@ -18,7 +18,7 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("teacher")]
+        [Route("teachers")]
         public async Task<IActionResult> GetAllTeachers()
         {
             try
@@ -33,7 +33,7 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("teacher/{id}")]
+        [Route("teachers/{id}")]
         public async Task<IActionResult> GetTeacherById([FromRoute] int id)
         {
             try
@@ -53,7 +53,7 @@ namespace Lms.Controllers
         }
 
         [HttpPost]
-        [Route("teacher")]
+        [Route("teachers")]
         public async Task<IActionResult> CreateNewTeacher([FromBody] TeacherPost newTeacher)
         {
             try
@@ -68,7 +68,7 @@ namespace Lms.Controllers
         }
 
         [HttpDelete]
-        [Route("teacher/{id}")]
+        [Route("teachers/{id}")]
         public async Task<IActionResult> DeleteTeacherById([FromRoute] int id)
         {
             try
@@ -89,7 +89,7 @@ namespace Lms.Controllers
         }
 
         [HttpPut]
-        [Route("teacher")]
+        [Route("teachers")]
         public async Task<IActionResult> UpdateTeacherById([FromBody] Teacher updateRequest)
         {
             try
@@ -108,7 +108,6 @@ namespace Lms.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-
         }
     }
 }

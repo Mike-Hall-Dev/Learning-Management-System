@@ -68,24 +68,27 @@ namespace Lms.Daos
             }
         }
         
-        public async Task<IEnumerable<Student>> GetEnrollmentsById(int id, bool isActive)
+        public async Task<IEnumerable<Student>> GetEnrollmentsById(int id, bool isActive, bool hasQueryParam)
         {
-            var query = $"SELECT  Course.Name, Course.Id, Course.TeacherId, Student.Id as Student FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
+            var query = $"SELECT Course.Name, Course.Id, Course.TeacherId, Student.Id as Student FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
 
             if (isActive)
             {
                 query += "AND Enrollment.Active=1";
             }
-            else
+            if (!isActive && hasQueryParam)
             {
                 query += "AND Enrollment.Active=0";
             }
-
 
             using (var connection = _context.CreateConnection())
             {
                 var result = await connection.QueryAsync<Student>(query);
 
+                if (result.Count() == 0)
+                {
+                    return null;
+                }
                 return result;
             }
         }

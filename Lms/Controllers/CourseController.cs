@@ -1,5 +1,6 @@
 ﻿using Lms.Daos;
 using Lms.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("course")]
+        [Route("courses")]
         public async Task<IActionResult> GetAllCourses()
         {
             try
@@ -34,7 +35,7 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("course/{id}")]
+        [Route("courses/{id}")]
         public async Task<IActionResult> GetCourseById([FromRoute] int id)
         {
             try
@@ -74,7 +75,7 @@ namespace Lms.Controllers
         //}
 
         [HttpPost]
-        [Route("course")]
+        [Route("courses")]
         public async Task<IActionResult> CreateNewCourse([FromBody] CoursePost newCourse)
         {
             try
@@ -89,12 +90,13 @@ namespace Lms.Controllers
         }
 
         [HttpDelete]
-        [Route("course/{id}")]
+        [Route("courses/{id}")]
         public async Task<IActionResult> DeleteCourseById([FromRoute] int id)
         {
             try
             {
                 var course = GetCourseById(id);
+
                 if (course == null)
                 {
                     return StatusCode(404);
@@ -110,12 +112,13 @@ namespace Lms.Controllers
         }
 
         [HttpPut]
-        [Route("course")]
+        [Route("courses")]
         public async Task<IActionResult> UpdateCourseById([FromBody] Course updateRequest)
         {
             try
             {
                 var course = await _courseDao.GetCourseById(updateRequest.Id);
+
                 if (course == null)
                 {
                     return StatusCode(404);

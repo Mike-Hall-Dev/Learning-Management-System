@@ -34,7 +34,7 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("student/{id}")]
+        [Route("students/{id}")]
         public async Task<IActionResult> GetStudentById([FromRoute] int id)
         {
             try
@@ -54,12 +54,15 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("student/{id}/enrollment")]
-        public async Task<IActionResult> GetEnrollmentById([FromRoute] int id, [FromQuery] bool isActive)
+        [Route("students/{id}/enrollments")]
+        public async Task<IActionResult> GetEnrollmentsById([FromRoute] int id, [FromQuery] bool isActive)
         {
             try
             {
-                var result = await _studentDao.GetEnrollmentsById(id, isActive);
+                bool hasQueryParam = Request.QueryString.HasValue;
+
+                var result = await _studentDao.GetEnrollmentsById(id, isActive, hasQueryParam);
+
                 if (result == null)
                 {
                     return StatusCode(404);
@@ -74,7 +77,7 @@ namespace Lms.Controllers
         }
 
         [HttpPost]
-        [Route("student")]
+        [Route("students")]
         public async Task<IActionResult> CreateNewStudent([FromBody] StudentPost newStudent)
         {
             try
@@ -88,21 +91,8 @@ namespace Lms.Controllers
             }
         }
 
-/*       public async Task<IActionResult> GetEnrollments([FromRoute] int id, [FromQuery] bool isActive)
-        {
-            try
-            {
-
-            }
-            catch
-            {
-
-            }
-        }*/
-
-
         [HttpDelete]
-        [Route("student/{id}")]
+        [Route("students/{id}")]
         public async Task<IActionResult> DeleteStudentById([FromRoute] int id)
         {
             try
@@ -123,7 +113,7 @@ namespace Lms.Controllers
         }
 
         [HttpPut]
-        [Route("student")]
+        [Route("students")]
         public async Task<IActionResult> UpdateStudentById([FromBody] Student updateRequest)
         {
             try

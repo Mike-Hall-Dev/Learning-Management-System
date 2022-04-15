@@ -36,7 +36,7 @@ namespace Lms.Controllers
 
         [HttpGet]
         [Route("courses/{id}")]
-        public async Task<IActionResult> GetCourseById([FromRoute] int id)
+        public async Task<IActionResult> GetCourseById([FromRoute] Guid id)
         {
             try
             {
@@ -56,11 +56,12 @@ namespace Lms.Controllers
 
        [HttpGet]
        [Route("courses/{id}/roster")]
-        public async Task<IActionResult> GetClassRoster([FromRoute] int id)
+        public async Task<IActionResult> GetClassRoster([FromRoute] Guid id)
         {
             try
             {
-                var roster = await _courseDao.GetClassRosterById(id);
+                var roster = await _courseDao.GetActiveClassRosterById(id);
+
                 if (roster == null)
                 {
                     return StatusCode(404);
@@ -81,7 +82,7 @@ namespace Lms.Controllers
             try
             {
                 await _courseDao.CreateCourse(newCourse);
-                return Ok(newCourse);
+                return StatusCode(201, newCourse);
             }
             catch (Exception e)
             {
@@ -91,7 +92,7 @@ namespace Lms.Controllers
 
         [HttpDelete]
         [Route("courses/{id}")]
-        public async Task<IActionResult> DeleteCourseById([FromRoute] int id)
+        public async Task<IActionResult> DeleteCourseById([FromRoute] Guid id)
         {
             try
             {

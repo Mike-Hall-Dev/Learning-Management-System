@@ -20,7 +20,8 @@ namespace Lms.Daos
 
         public async Task CreateStudent(StudentPost newStudent)
         {
-            var query = $"INSERT INTO Student(Name) VALUES('{newStudent.Name}')";
+            var query = $"INSERT INTO Student(FirstName, MiddleInitial, LastName, Email) " +
+                $"VALUES('{newStudent.FirstName}','{newStudent.MiddleInitial}','{newStudent.LastName}','{newStudent.Email}')";
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query);
@@ -38,9 +39,9 @@ namespace Lms.Daos
             }
         }
 
-        public async Task<Student> GetStudentById(int id)
+        public async Task<Student> GetStudentById(Guid id)
         {
-            var query = $"SELECT * FROM Student WHERE Id = {id}";
+            var query = $"SELECT * FROM Student WHERE Id = '{id}'";
             using (var connection = _context.CreateConnection())
             {
                 var student = await connection.QueryFirstOrDefaultAsync<Student>(query);
@@ -49,9 +50,9 @@ namespace Lms.Daos
             }
         }
 
-        public async Task DeleteStudentById(int id)
+        public async Task DeleteStudentById(Guid id)
         {
-            var query = $"DELETE FROM Student WHERE Id = {id}";
+            var query = $"DELETE FROM Student WHERE Id = '{id}'";
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query);
@@ -60,7 +61,12 @@ namespace Lms.Daos
 
         public async Task UpdateStudentById(Student updateRequest)
         {
-            var query = $"UPDATE Student SET Name ='{updateRequest.Name}' WHERE Id = '{updateRequest.Id}'";
+            var query = $"UPDATE Student SET " +
+                $"FirstName ='{updateRequest.FirstName}'," +
+                $"MiddleInitial ='{updateRequest.MiddleInitial}, " +
+                $"LastName ='{updateRequest.LastName}'," +
+                $"Email ='{updateRequest.Email}' " +
+                $"WHERE Id = '{updateRequest.Id}'";
 
             using (var connection = _context.CreateConnection())
             {
@@ -68,9 +74,10 @@ namespace Lms.Daos
             }
         }
         
-        public async Task<IEnumerable<Student>> GetEnrollmentsById(int id, bool isActive, bool hasQueryParam)
+        // Bugged, cuts off the last column selected in the query, student.email gets returned and null
+        public async Task<IEnumerable<Student>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
         {
-            var query = $"SELECT Course.Name, Course.Id, Course.TeacherId, Student.Id as Student FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
+            var query = $"SELECT Course.Name, Course.Id, Course.TeacherId, Student.Id, Student.FirstName, Student.MiddleInitial, Student.LastName, Student.Email as Student FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
 
             if (isActive)
             {

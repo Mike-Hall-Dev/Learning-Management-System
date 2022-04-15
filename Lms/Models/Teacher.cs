@@ -12,12 +12,22 @@ namespace Lms.Models
         [Key]
         [Required]
         [Display(Name = "Id")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        [Display(Name = "Name")]
-        public string Name { get; set; }
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
 
-        //public List<Course> Courses { get; set; }
+        [Display(Name = "Middle Initial")]
+        public char MiddleInitial { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+
     }
 }

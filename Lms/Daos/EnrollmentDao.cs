@@ -25,9 +25,9 @@ namespace Lms.Daos
             }
         }
 
-        public async Task<Enrollment> GetEnrollmentById(int id)
+        public async Task<Enrollment> GetEnrollmentById(Guid id)
         {
-            var query = $"SELECT * FROM Enrollment WHERE Id = {id}";
+            var query = $"SELECT * FROM Enrollment WHERE Id = '{id}'";
             using (var connection = _enrollmentDao.CreateConnection())
             {
                 var enrollment = await connection.QueryFirstOrDefaultAsync<Enrollment>(query);
@@ -36,7 +36,7 @@ namespace Lms.Daos
             }
         }
 
-        public async Task UpdateEnrollmentActiveStatus(EnrollmentPatch updateRequest, int id)
+        public async Task UpdateEnrollmentActiveStatus(EnrollmentPatch updateRequest, Guid id)
         {
             var query = $"UPDATE Enrollment SET Active ='{updateRequest.Active}' WHERE Id = '{id}'";
 
@@ -46,7 +46,7 @@ namespace Lms.Daos
             }
         }
 
-        public async Task DeleteEnrollmentById(int id)
+        public async Task DeleteEnrollmentById(Guid id)
         {
             var query = $"DELETE FROM Enrollment WHERE Id = {id}";
             using (var connection = _enrollmentDao.CreateConnection())

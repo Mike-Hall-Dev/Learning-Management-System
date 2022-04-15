@@ -18,7 +18,7 @@ namespace Lms.Daos
 
         public async Task CreateTeacher(TeacherPost newTeacher)
         {
-            var query = $"INSERT INTO Teacher(Name) VALUES('{newTeacher.Name}')";
+            var query = $"INSERT INTO Teacher(FirstName, MiddleIniital, LastName, Email) VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}'";
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query);
@@ -35,9 +35,9 @@ namespace Lms.Daos
             }
         }
 
-        public async Task<Teacher> GetTeacherById(int id)
+        public async Task<Teacher> GetTeacherById(Guid id)
         {
-            var query = $"SELECT * FROM Teacher WHERE Id = {id}";
+            var query = $"SELECT * FROM Teacher WHERE Id = '{id}'";
             using (var connection = _context.CreateConnection())
             {
                 var teacher = await connection.QueryFirstOrDefaultAsync<Teacher>(query);
@@ -46,18 +46,24 @@ namespace Lms.Daos
             }
         }
 
-        public async Task DeleteTeacherById(int id)
+        public async Task DeleteTeacherById(Guid id)
         {
-            var query = $"DELETE FROM Teacher WHERE Id = {id}";
+            var query = $"DELETE FROM Teacher WHERE Id = '{id}'";
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query);
             }
         }
 
+        
         public async Task UpdateTeacherById(Teacher updateRequest)
         {
-            var query = $"UPDATE Teacher SET Name ='{updateRequest.Name}' WHERE Id = '{updateRequest.Id}'";
+            var query = $"UPDATE Teacher SET " +
+                $"FirstName ='{updateRequest.FirstName}'," +
+                $"MiddleInitial ='{updateRequest.MiddleInitial}, " +
+                $"LastName ='{updateRequest.LastName}'," +
+                $"Email ='{updateRequest.Email}' " +
+                $"WHERE Id = '{updateRequest.Id}'";
 
             using (var connection = _context.CreateConnection())
             {

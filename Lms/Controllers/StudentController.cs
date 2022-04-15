@@ -35,7 +35,7 @@ namespace Lms.Controllers
 
         [HttpGet]
         [Route("students/{id}")]
-        public async Task<IActionResult> GetStudentById([FromRoute] int id)
+        public async Task<IActionResult> GetStudentById([FromRoute] Guid id)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Lms.Controllers
 
         [HttpGet]
         [Route("students/{id}/enrollments")]
-        public async Task<IActionResult> GetEnrollmentsById([FromRoute] int id, [FromQuery] bool isActive)
+        public async Task<IActionResult> GetEnrollmentsById([FromRoute] Guid id, [FromQuery] bool isActive)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Lms.Controllers
             try
             {
                 await _studentDao.CreateStudent(newStudent);
-                return Ok(newStudent);
+                return StatusCode(201, newStudent);
             }
             catch (Exception e)
             {
@@ -93,7 +93,7 @@ namespace Lms.Controllers
 
         [HttpDelete]
         [Route("students/{id}")]
-        public async Task<IActionResult> DeleteStudentById([FromRoute] int id)
+        public async Task<IActionResult> DeleteStudentById([FromRoute] Guid id)
         {
             try
             {

@@ -34,7 +34,7 @@ namespace Lms.Controllers
 
         [HttpGet]
         [Route("teachers/{id}")]
-        public async Task<IActionResult> GetTeacherById([FromRoute] int id)
+        public async Task<IActionResult> GetTeacherById([FromRoute] Guid id)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace Lms.Controllers
             try
             {
                 await _teacherDao.CreateTeacher(newTeacher);
-                return Ok(newTeacher);
+                return StatusCode(201, newTeacher);
             }
             catch (Exception e)
             {
@@ -69,7 +69,7 @@ namespace Lms.Controllers
 
         [HttpDelete]
         [Route("teachers/{id}")]
-        public async Task<IActionResult> DeleteTeacherById([FromRoute] int id)
+        public async Task<IActionResult> DeleteTeacherById([FromRoute] Guid id)
         {
             try
             {

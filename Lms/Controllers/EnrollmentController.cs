@@ -25,7 +25,7 @@ namespace Lms.Controllers
             try
             {
                 await _enrollmentDao.CreateEnrollment(newEnrollment);
-                return Ok(newEnrollment);
+                return StatusCode(201, newEnrollment);
             }
             catch (Exception e)
             {
@@ -35,7 +35,7 @@ namespace Lms.Controllers
 
         [HttpPatch]
         [Route("enrollments/{id}")]
-        public async Task<IActionResult> UpdateEnrollmentActiveStatus(EnrollmentPatch updateRequest, [FromRoute] int id)
+        public async Task<IActionResult> UpdateEnrollmentActiveStatus(EnrollmentPatch updateRequest, [FromRoute] Guid id)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace Lms.Controllers
 
         [HttpDelete]
         [Route("enrollments/{id}")]
-        public async Task<IActionResult> DeleteEnrollmentById([FromRoute] int id)
+        public async Task<IActionResult> DeleteEnrollmentById([FromRoute] Guid id)
         {
             try
             {

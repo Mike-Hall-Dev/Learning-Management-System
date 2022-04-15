@@ -11,17 +11,17 @@ namespace Lms.Models
     {
         [Key]
         [Display(Name = "Id")]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [ForeignKey("Student")]
         [Display(Name = "StudentId")]
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
         [Required]
         [ForeignKey("Course")]
         [Display(Name = "CourseId")]
-        public int CourseId { get; set; }
+        public Guid CourseId { get; set; }
 
         [Display(Name= "Active")]
         public bool Active { get; set; }

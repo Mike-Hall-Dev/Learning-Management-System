@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class EnrollmentPatch
+    public class EnrollmentUpdateStatusDto
     {
-        [Display(Name = "Active")]
         public bool Active { get; set; }
     }
 }

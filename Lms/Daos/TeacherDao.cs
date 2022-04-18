@@ -16,7 +16,7 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateTeacher(TeacherPost newTeacher)
+        public async Task CreateTeacher(TeacherCreateDto newTeacher)
         {
             var query = $"INSERT INTO Teacher(FirstName, MiddleIniital, LastName, Email) VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}'";
             using (var connection = _context.CreateConnection())
@@ -60,8 +60,8 @@ namespace Lms.Daos
         {
             var query = $"UPDATE Teacher SET " +
                 $"FirstName ='{updateRequest.FirstName}'," +
-                $"MiddleInitial ='{updateRequest.MiddleInitial}, " +
-                $"LastName ='{updateRequest.LastName}'," +
+                $"MiddleInitial ='{updateRequest.MiddleInitial}', " +
+                $"LastName ='{updateRequest.LastName}', " +
                 $"Email ='{updateRequest.Email}' " +
                 $"WHERE Id = '{updateRequest.Id}'";
 

@@ -7,21 +7,18 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class Student
+    public class CourseReadForEnrollmentsDto
     {
         [Key]
         [Required]
-        public Guid Id { get; set; }
+        public Guid CourseId { get; set; }
 
         [Required]
-        public string FirstName { get; set; }
+        public string Name { get; set; }
 
-        public char MiddleInitial { get; set; }
+        public string Subject { get; set; }
 
-        [Required]
-        public string LastName { get; set; }
-
-        public string Email { get; set; }
+        public Guid TeacherId { get; set; }
 
     }
 }

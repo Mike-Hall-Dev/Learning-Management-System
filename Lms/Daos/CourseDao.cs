@@ -16,7 +16,7 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateCourse(CoursePost newCourse)
+        public async Task CreateCourse(CourseCreateDto newCourse)
         {
             var query = $"INSERT INTO Course(Name, Subject, TeacherId, StartTime, EndTime, Room) VALUES('{newCourse.Name}','{newCourse.Subject}', '{newCourse.TeacherId}','{newCourse.StartTime}', '{newCourse.EndTime}','{newCourse.Room}')";
             using (var connection = _context.CreateConnection())
@@ -64,7 +64,7 @@ namespace Lms.Daos
                 $"TeacherId = '{updateRequest.TeacherId}', " +
                 $"StartTime ='{updateRequest.StartTime}', " +
                 $"EndTime ='{updateRequest.EndTime}', " +
-                $"Room ='{updateRequest.Room}'  " +
+                $"Room ='{updateRequest.Room}'" +
                 $"WHERE Id = '{updateRequest.Id}'";
 
             using (var connection = _context.CreateConnection())

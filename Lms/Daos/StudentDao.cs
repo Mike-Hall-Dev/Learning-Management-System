@@ -18,7 +18,7 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateStudent(StudentPost newStudent)
+        public async Task CreateStudent(StudentCreateDto newStudent)
         {
             var query = $"INSERT INTO Student(FirstName, MiddleInitial, LastName, Email) " +
                 $"VALUES('{newStudent.FirstName}','{newStudent.MiddleInitial}','{newStudent.LastName}','{newStudent.Email}')";
@@ -63,7 +63,7 @@ namespace Lms.Daos
         {
             var query = $"UPDATE Student SET " +
                 $"FirstName ='{updateRequest.FirstName}'," +
-                $"MiddleInitial ='{updateRequest.MiddleInitial}, " +
+                $"MiddleInitial ='{updateRequest.MiddleInitial}', " +
                 $"LastName ='{updateRequest.LastName}'," +
                 $"Email ='{updateRequest.Email}' " +
                 $"WHERE Id = '{updateRequest.Id}'";
@@ -75,9 +75,9 @@ namespace Lms.Daos
         }
         
         // Bugged, cuts off the last column selected in the query, student.email gets returned and null
-        public async Task<IEnumerable<Student>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
+        public async Task<IEnumerable<CourseReadForEnrollmentsDto>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
         {
-            var query = $"SELECT Course.Name, Course.Id, Course.TeacherId, Student.Id, Student.FirstName, Student.MiddleInitial, Student.LastName, Student.Email as Student FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
+            var query = $"SELECT Course.Id as courseId, Course.[Name], Course.[Subject], Course.TeacherId FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
 
             if (isActive)
             {
@@ -90,7 +90,7 @@ namespace Lms.Daos
 
             using (var connection = _context.CreateConnection())
             {
-                var result = await connection.QueryAsync<Student>(query);
+                var result = await connection.QueryAsync<CourseReadForEnrollmentsDto>(query);
 
                 if (result.Count() == 0)
                 {

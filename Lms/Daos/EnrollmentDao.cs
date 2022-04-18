@@ -16,9 +16,9 @@ namespace Lms.Daos
             _enrollmentDao = enrollmentDao;
         }
 
-        public async Task CreateEnrollment(EnrollmentPost newEnrollment)
+        public async Task CreateEnrollment(EnrollmentCreateDto newEnrollment)
         {
-            var query = $"INSERT INTO Enrollment(StudentId, CourseId, Active) VALUES('{newEnrollment.StudentId}','{newEnrollment.CourseId}','{newEnrollment.Active}')";
+            var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) OUTPUT Inserted.ID VALUES('{newEnrollment.StudentId}','{newEnrollment.CourseId}','{newEnrollment.Active}')";
             using (var connection = _enrollmentDao.CreateConnection())
             {
                 await connection.ExecuteAsync(query);
@@ -36,7 +36,7 @@ namespace Lms.Daos
             }
         }
 
-        public async Task UpdateEnrollmentActiveStatus(EnrollmentPatch updateRequest, Guid id)
+        public async Task UpdateEnrollmentActiveStatus(EnrollmentUpdateStatusDto updateRequest, Guid id)
         {
             var query = $"UPDATE Enrollment SET Active ='{updateRequest.Active}' WHERE Id = '{id}'";
 

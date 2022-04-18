@@ -78,7 +78,7 @@ namespace Lms.Controllers
 
         [HttpPost]
         [Route("students")]
-        public async Task<IActionResult> CreateNewStudent([FromBody] StudentPost newStudent)
+        public async Task<IActionResult> CreateNewStudent([FromBody] StudentCreateDto newStudent)
         {
             try
             {

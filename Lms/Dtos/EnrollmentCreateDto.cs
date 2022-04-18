@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class EnrollmentPost
+    public class EnrollmentCreateDto
     {
+
         [Required]
         [ForeignKey("Student")]
-        [Display(Name = "StudentId")]
         public Guid StudentId { get; set; }
 
         [Required]
         [ForeignKey("Course")]
-        [Display(Name = "CourseId")]
         public Guid CourseId { get; set; }
 
-        [Display(Name = "Active")]
         public bool Active { get; set; }
     }
 }

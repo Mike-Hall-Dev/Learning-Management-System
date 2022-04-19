@@ -56,7 +56,7 @@ namespace Lms.Daos
             }
         }
 
-        public async Task UpdateCourseById(Course updateRequest)
+        public async Task UpdateCourseById(Guid id, Course updateRequest)
         {
             var query = $"UPDATE Course SET " +
                 $"Name ='{updateRequest.Name}'," +
@@ -65,7 +65,7 @@ namespace Lms.Daos
                 $"StartTime ='{updateRequest.StartTime}', " +
                 $"EndTime ='{updateRequest.EndTime}', " +
                 $"Room ='{updateRequest.Room}'" +
-                $"WHERE Id = '{updateRequest.Id}'";
+                $"WHERE Id = '{id}'";
 
             using (var connection = _context.CreateConnection())
             {

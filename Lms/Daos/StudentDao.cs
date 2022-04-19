@@ -59,14 +59,14 @@ namespace Lms.Daos
             }
         }
 
-        public async Task UpdateStudentById(Student updateRequest)
+        public async Task UpdateStudentById(Guid id, Student updateRequest)
         {
             var query = $"UPDATE Student SET " +
                 $"FirstName ='{updateRequest.FirstName}'," +
                 $"MiddleInitial ='{updateRequest.MiddleInitial}', " +
                 $"LastName ='{updateRequest.LastName}'," +
                 $"Email ='{updateRequest.Email}' " +
-                $"WHERE Id = '{updateRequest.Id}'";
+                $"WHERE Id = '{id}'";
 
             using (var connection = _context.CreateConnection())
             {

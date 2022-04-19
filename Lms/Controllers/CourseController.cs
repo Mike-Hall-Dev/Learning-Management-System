@@ -113,19 +113,19 @@ namespace Lms.Controllers
         }
 
         [HttpPut]
-        [Route("courses")]
-        public async Task<IActionResult> UpdateCourseById([FromBody] Course updateRequest)
+        [Route("courses/{id}")]
+        public async Task<IActionResult> UpdateCourseById([FromRoute] Guid id, [FromBody] Course updateRequest)
         {
             try
             {
-                var course = await _courseDao.GetCourseById(updateRequest.Id);
+                var course = await _courseDao.GetCourseById(id);
 
                 if (course == null)
                 {
                     return StatusCode(404);
                 }
 
-                await _courseDao.UpdateCourseById(updateRequest);
+                await _courseDao.UpdateCourseById(id, updateRequest);
                 return StatusCode(200);
 
             }

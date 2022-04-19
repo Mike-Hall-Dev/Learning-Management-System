@@ -1,5 +1,6 @@
 ﻿using Lms.Daos;
 using Lms.Models;
+using Lms.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Lms.Controllers
             try
             {
                 var students = await _studentDao.GetAllStudents();
+
                 return Ok(students);
             }
             catch (Exception e)
@@ -40,11 +42,13 @@ namespace Lms.Controllers
             try
             {
                 var student = await _studentDao.GetStudentById(id);
+
                 if (student == null)
                 {
                     return StatusCode(404);
                 }
-                return Ok(student);
+
+                return Ok(student.ConvertToDto());
 
             }
             catch (Exception e)

@@ -74,7 +74,6 @@ namespace Lms.Daos
             }
         }
         
-        // Bugged, cuts off the last column selected in the query, student.email gets returned and null
         public async Task<IEnumerable<CourseReadForEnrollmentsDto>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
         {
             var query = $"SELECT Course.Id as courseId, Course.[Name], Course.[Subject], Course.TeacherId FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";

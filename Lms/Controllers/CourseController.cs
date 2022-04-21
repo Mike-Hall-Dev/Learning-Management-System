@@ -27,7 +27,7 @@ namespace Lms.Controllers
             try
             {
                 var courses = await _courseDao.GetAllCourses();
-                return Ok(courses);
+                return Ok(courses.ConvertToDtoList());
             }
             catch (Exception e)
             {

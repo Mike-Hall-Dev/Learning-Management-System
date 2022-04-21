@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lms.Extensions;
 
 namespace Lms.Controllers
 {
@@ -24,7 +25,8 @@ namespace Lms.Controllers
             try
             {
                 var teachers = await _teacherDao.GetAllTeachers();
-                return Ok(teachers);
+
+                return Ok(teachers.ConvertToDtoList());
             }
             catch (Exception e)
             {
@@ -43,7 +45,7 @@ namespace Lms.Controllers
                 {
                     return StatusCode(404);
                 }
-                return Ok(teacher);
+                return Ok(teacher.ConvertToDto());
 
             }
             catch (Exception e)
@@ -54,12 +56,12 @@ namespace Lms.Controllers
 
         [HttpPost]
         [Route("teachers")]
-        public async Task<IActionResult> CreateNewTeacher([FromBody] TeacherCreateDto newTeacher)
+        public async Task<IActionResult> CreateNewTeacher([FromBody] TeacherRequestDto newTeacher)
         {
             try
             {
-                await _teacherDao.CreateTeacher(newTeacher);
-                return StatusCode(201, newTeacher);
+              await _teacherDao.CreateTeacher(newTeacher.ConvertToModel());
+               return StatusCode(201, newTeacher);
             }
             catch (Exception e)
             {
@@ -80,7 +82,7 @@ namespace Lms.Controllers
                 }
 
                 await _teacherDao.DeleteTeacherById(id);
-                return StatusCode(200);
+                return StatusCode(204);
             }
             catch (Exception e)
             {
@@ -90,7 +92,7 @@ namespace Lms.Controllers
 
         [HttpPut]
         [Route("teachers/{id}")]
-        public async Task<IActionResult> UpdateTeacherById( [FromRoute] Guid id, [FromBody] Teacher updateRequest)
+        public async Task<IActionResult> UpdateTeacherById( [FromRoute] Guid id, [FromBody] TeacherRequestDto updateRequest)
         {
             try
             {
@@ -100,7 +102,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _teacherDao.UpdateTeacherById(id, updateRequest);
+                await _teacherDao.UpdateTeacherById(id, updateRequest.ConvertToModel());
                 return StatusCode(200);
 
             }

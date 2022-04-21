@@ -16,12 +16,12 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateTeacher(TeacherCreateDto newTeacher)
+        public async Task CreateTeacher(Teacher newTeacher)
         {
-            var query = $"INSERT INTO Teacher(FirstName, MiddleIniital, LastName, Email) VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}'";
+            var query = $"INSERT INTO Teacher(FirstName, MiddleInitial, LastName, Email) OUTPUT INSERTED.Id VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}')";
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+               await connection.ExecuteAsync(query);
             }
         }
         public async Task<IEnumerable<Teacher>> GetAllTeachers()

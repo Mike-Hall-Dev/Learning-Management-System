@@ -20,7 +20,7 @@ namespace Lms.Controllers
 
         [HttpPost]
         [Route("enrollments")]
-        public async Task<IActionResult> CreateNewEnrollment(EnrollmentCreateDto newEnrollment)
+        public async Task<IActionResult> CreateNewEnrollment(EnrollmentRequestDto newEnrollment)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Lms.Controllers
 
         [HttpPatch]
         [Route("enrollments/{id}")]
-        public async Task<IActionResult> UpdateEnrollmentActiveStatus(EnrollmentUpdateStatusDto updateRequest, [FromRoute] Guid id)
+        public async Task<IActionResult> UpdateEnrollmentActiveStatus(EnrollmentRequestUpdateStatusDto updateRequest, [FromRoute] Guid id)
         {
             try
             {

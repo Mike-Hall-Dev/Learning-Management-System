@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lms.Dtos
+namespace Lms.Models
 {
-    public class CourseReadDto
+    public class CourseResponseForEnrollmentsDto
     {
         [Key]
         [Required]
-        public Guid Id { get; set; }
+        public Guid CourseId { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -19,10 +20,5 @@ namespace Lms.Dtos
 
         public Guid? TeacherId { get; set; }
 
-        public DateTime? StartTime { get; set; }
-
-        public DateTime? EndTime { get; set; }
-
-        public string Room { get; set; }
     }
 }

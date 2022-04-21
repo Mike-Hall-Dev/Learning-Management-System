@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class EnrollmentCreateDto
+    public class EnrollmentRequestDto
     {
 
         [Required]

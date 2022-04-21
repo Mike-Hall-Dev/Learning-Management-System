@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lms.Dtos
 {
-    public class StudentReadDto
+    public class StudentResponseDto
     {
         [Key]
         [Required]

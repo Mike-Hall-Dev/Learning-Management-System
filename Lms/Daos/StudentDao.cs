@@ -18,7 +18,7 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateStudent(StudentCreateDto newStudent)
+        public async Task CreateStudent(Student newStudent)
         {
             var query = $"INSERT INTO Student(FirstName, MiddleInitial, LastName, Email) " +
                 $"VALUES('{newStudent.FirstName}','{newStudent.MiddleInitial}','{newStudent.LastName}','{newStudent.Email}')";
@@ -35,7 +35,7 @@ namespace Lms.Daos
             {
                 var students = await connection.QueryAsync<Student>(query);
 
-                return students.ToList();
+                return students;
             }
         }
 
@@ -74,7 +74,7 @@ namespace Lms.Daos
             }
         }
         
-        public async Task<IEnumerable<CourseReadForEnrollmentsDto>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
+        public async Task<IEnumerable<Course>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
         {
             var query = $"SELECT Course.Id as courseId, Course.[Name], Course.[Subject], Course.TeacherId FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
 
@@ -89,7 +89,7 @@ namespace Lms.Daos
 
             using (var connection = _context.CreateConnection())
             {
-                var result = await connection.QueryAsync<CourseReadForEnrollmentsDto>(query);
+                var result = await connection.QueryAsync<Course>(query);
 
                 if (result.Count() == 0)
                 {

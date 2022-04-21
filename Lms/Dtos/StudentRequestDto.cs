@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class StudentCreateDto
+    public class StudentRequestDto
     {
 
         [Required]

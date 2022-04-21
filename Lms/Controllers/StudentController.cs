@@ -27,7 +27,7 @@ namespace Lms.Controllers
             {
                 var students = await _studentDao.GetAllStudents();
 
-                return Ok(students);
+                return Ok(students.ConvertToDtoList());
             }
             catch (Exception e)
             {
@@ -65,13 +65,13 @@ namespace Lms.Controllers
             {
                 bool hasQueryParam = Request.QueryString.HasValue;
 
-                var result = await _studentDao.GetEnrollmentsById(id, isActive, hasQueryParam);
+                var enrollments = await _studentDao.GetEnrollmentsById(id, isActive, hasQueryParam);
 
-                if (result == null)
+                if (enrollments == null)
                 {
                     return StatusCode(404);
                 }
-                return Ok(result);
+                return Ok(enrollments.ConvertToDtoListForEnrollments());
 
             }
             catch (Exception e)
@@ -82,11 +82,11 @@ namespace Lms.Controllers
 
         [HttpPost]
         [Route("students")]
-        public async Task<IActionResult> CreateNewStudent([FromBody] StudentCreateDto newStudent)
+        public async Task<IActionResult> CreateNewStudent([FromBody] StudentRequestDto newStudent)
         {
             try
             {
-                await _studentDao.CreateStudent(newStudent);
+                await _studentDao.CreateStudent(newStudent.ConvertToModel());
                 return StatusCode(201, newStudent);
             }
             catch (Exception e)
@@ -108,7 +108,7 @@ namespace Lms.Controllers
                 }
 
                 await _studentDao.DeleteStudentById(id);
-                return StatusCode(200);
+                return StatusCode(204);
             }
             catch (Exception e)
             {
@@ -118,19 +118,19 @@ namespace Lms.Controllers
 
         [HttpPut]
         [Route("students/{id}")]
-        public async Task<IActionResult> UpdateStudentById([FromRoute] Guid id, [FromBody] Student updateRequest)
+        public async Task<IActionResult> UpdateStudentById([FromRoute] Guid id, [FromBody] StudentRequestDto updateRequest)
         {
             try
             {
                 var student = await _studentDao.GetStudentById(id);
+
                 if (student == null)
                 {
                     return StatusCode(404);
                 }
 
-                await _studentDao.UpdateStudentById(id, updateRequest);
+                await _studentDao.UpdateStudentById(id, updateRequest.ConvertToModel());
                 return StatusCode(200);
-
             }
             catch (Exception e)
             {

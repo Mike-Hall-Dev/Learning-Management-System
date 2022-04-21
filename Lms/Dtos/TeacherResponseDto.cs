@@ -4,10 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lms.Models
+namespace Lms.Dtos
 {
-    public class TeacherCreateDto
+    public class TeacherResponseDto
     {
+        [Key]
+        [Required]
+        public Guid Id { get; set; }
+
         [Required]
         public string FirstName { get; set; }
 
@@ -17,7 +21,5 @@ namespace Lms.Models
         public string LastName { get; set; }
 
         public string Email { get; set; }
-
     }
 }
-

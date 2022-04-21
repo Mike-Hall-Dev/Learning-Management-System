@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lms.Extensions;
 
 namespace Lms.Controllers
 {
@@ -45,7 +46,7 @@ namespace Lms.Controllers
                 {
                     return StatusCode(404);
                 }
-                return Ok(course);
+                return Ok(course.ConvertToDto());
 
             }
             catch (Exception e)
@@ -66,7 +67,7 @@ namespace Lms.Controllers
                 {
                     return StatusCode(404);
                 }
-                return Ok(roster);
+                return Ok(roster.ConvertToDtoList());
 
             }
             catch (Exception e)
@@ -77,11 +78,11 @@ namespace Lms.Controllers
 
         [HttpPost]
         [Route("courses")]
-        public async Task<IActionResult> CreateNewCourse([FromBody] CourseCreateDto newCourse)
+        public async Task<IActionResult> CreateNewCourse([FromBody] CourseRequestDto newCourse)
         {
             try
             {
-                await _courseDao.CreateCourse(newCourse);
+                await _courseDao.CreateCourse(newCourse.ConvertToModel());
                 return StatusCode(201, newCourse);
             }
             catch (Exception e)
@@ -114,7 +115,7 @@ namespace Lms.Controllers
 
         [HttpPut]
         [Route("courses/{id}")]
-        public async Task<IActionResult> UpdateCourseById([FromRoute] Guid id, [FromBody] Course updateRequest)
+        public async Task<IActionResult> UpdateCourseById([FromRoute] Guid id, [FromBody] CourseRequestDto updateRequest)
         {
             try
             {
@@ -125,8 +126,8 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _courseDao.UpdateCourseById(id, updateRequest);
-                return StatusCode(200);
+                await _courseDao.UpdateCourseById(id, updateRequest.ConvertToModel());
+                return StatusCode(204);
 
             }
             catch (Exception e)

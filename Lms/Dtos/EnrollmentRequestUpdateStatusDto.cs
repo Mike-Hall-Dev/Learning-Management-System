@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lms.Models
 {
-    public class EnrollmentUpdateStatusDto
+    public class EnrollmentRequestUpdateStatusDto
     {
         public bool Active { get; set; }
     }

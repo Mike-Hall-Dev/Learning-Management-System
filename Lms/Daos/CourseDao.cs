@@ -18,6 +18,7 @@ namespace Lms.Daos
 
         public async Task CreateCourse(Course newCourse)
         {
+            //var testNull = newCourse.TeacherId is null ? Convert.DBNull : newCourse.TeacherId;
             var query = $"INSERT INTO Course(Name, Subject, TeacherId, StartTime, EndTime, Room) VALUES('{newCourse.Name}','{newCourse.Subject}', '{newCourse.TeacherId}','{newCourse.StartTime}', '{newCourse.EndTime}','{newCourse.Room}')";
             using (var connection = _context.CreateConnection())
             {

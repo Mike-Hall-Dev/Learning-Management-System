@@ -31,6 +31,9 @@ namespace Lms.Extensions
         {
             if (course != null)
             {
+                Console.WriteLine(course.StartTime);
+                Console.WriteLine(course.Room);
+                Console.WriteLine(course.Id);
                 return new CourseResponseForEnrollmentsDto
                 {
                     CourseId = course.Id,
@@ -50,7 +53,7 @@ namespace Lms.Extensions
                 {
                     Name = courseRequestDto.Name,
                     Subject = courseRequestDto.Subject,
-                    TeacherId = courseRequestDto.TeacherId ?? null,
+                    TeacherId = courseRequestDto.TeacherId,
                     StartTime = courseRequestDto.StartTime,
                     EndTime = courseRequestDto.EndTime,
                     Room = courseRequestDto.Room

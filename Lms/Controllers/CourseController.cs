@@ -82,6 +82,9 @@ namespace Lms.Controllers
         {
             try
             {
+                var test = newCourse.ConvertToModel();
+                Console.WriteLine("Test Teacher Id",test.TeacherId);
+
                 await _courseDao.CreateCourse(newCourse.ConvertToModel());
                 return StatusCode(201, newCourse);
             }

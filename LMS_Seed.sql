@@ -18,7 +18,7 @@ CREATE TABLE Course (
 Id UNIQUEIDENTIFIER DEFAULT NEWID() PRIMARY KEY,
 Name varchar(255) not NULL,
 Subject varchar(255),
-TeacherId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Teacher(Id),
+TeacherId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Teacher(Id) ON DELETE SET NULL,
 StartTime Datetime,
 EndTime Datetime,
 Room varchar(255)
@@ -69,12 +69,3 @@ INSERT INTO Enrollment(Id, StudentId, CourseId, Active) VALUES ('afba908e-f102-4
 INSERT INTO Enrollment(Id, StudentId, CourseId, Active) VALUES ('5c1ee7f4-470c-44c4-a465-9823c43b0956','79c9fa91-ca05-4bd0-b705-ecd33c4d2ec4', '3aabc714-419f-41eb-9954-c6a5cd3b83f7', 0);
 INSERT INTO Enrollment(Id, StudentId, CourseId, Active) VALUES ('e8fc2b90-2ad9-4b22-b853-97056f494340','b16b02f4-3347-486d-b769-32254b389434', '5a4cf4ed-6a3c-4320-8f1b-db0eb9f61a45', 1);
 INSERT INTO Enrollment(Id, StudentId, CourseId, Active) VALUES ('b556bdfa-8ec1-48a1-ba44-6af1170d4252','b16b02f4-3347-486d-b769-32254b389434', '172866ee-d381-4414-bfe9-df9cdb7123b2', 1);
-
-
-
-
-
-
-
-
-

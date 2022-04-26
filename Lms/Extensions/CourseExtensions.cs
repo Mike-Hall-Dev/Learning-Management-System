@@ -21,7 +21,6 @@ namespace Lms.Extensions
                     TeacherId = course.TeacherId,
                     StartTime = course.StartTime,
                     EndTime = course.EndTime,
-                    Room = course.Room
                 };
             }
             return null;
@@ -31,9 +30,6 @@ namespace Lms.Extensions
         {
             if (course != null)
             {
-                Console.WriteLine(course.StartTime);
-                Console.WriteLine(course.Room);
-                Console.WriteLine(course.Id);
                 return new CourseResponseForEnrollmentsDto
                 {
                     CourseId = course.Id,
@@ -67,6 +63,7 @@ namespace Lms.Extensions
             if (courseList != null)
             {
                 var convertedList = new List<CourseResponseDto>();
+
                 foreach (Course course in courseList)
                 {
                     var convertedCourse = course.ConvertToDto();
@@ -83,6 +80,7 @@ namespace Lms.Extensions
             if (courseList != null)
             {
                 var convertedList = new List<CourseResponseForEnrollmentsDto>();
+
                 foreach (Course course in courseList)
                 {
                     var convertedCourse = course.ConvertToDtoForEnrollments();

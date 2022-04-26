@@ -27,6 +27,7 @@ namespace Lms.Controllers
             try
             {
                 var courses = await _courseDao.GetAllCourses();
+
                 return Ok(courses.ConvertToDtoList());
             }
             catch (Exception e)
@@ -42,10 +43,12 @@ namespace Lms.Controllers
             try
             {
                 var course = await _courseDao.GetCourseById(id);
+
                 if (course == null)
                 {
                     return StatusCode(404);
                 }
+
                 return Ok(course.ConvertToDto());
 
             }
@@ -82,11 +85,9 @@ namespace Lms.Controllers
         {
             try
             {
-                var test = newCourse.ConvertToModel();
-                Console.WriteLine("Test Teacher Id",test.TeacherId);
 
-                await _courseDao.CreateCourse(newCourse.ConvertToModel());
-                return StatusCode(201, newCourse);
+                var createdCourse = await _courseDao.CreateCourse(newCourse);
+                return Ok(createdCourse.ConvertToDto());
             }
             catch (Exception e)
             {
@@ -118,7 +119,7 @@ namespace Lms.Controllers
 
         [HttpPut]
         [Route("courses/{id}")]
-        public async Task<IActionResult> UpdateCourseById([FromRoute] Guid id, [FromBody] CourseRequestDto updateRequest)
+        public async Task<IActionResult> UpdateCourseById([FromRoute] Guid id, CourseRequestDto updateRequest)
         {
             try
             {

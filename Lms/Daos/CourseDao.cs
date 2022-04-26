@@ -16,15 +16,6 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateCourse(Course newCourse)
-        {
-            //var testNull = newCourse.TeacherId is null ? Convert.DBNull : newCourse.TeacherId;
-            var query = $"INSERT INTO Course(Name, Subject, TeacherId, StartTime, EndTime, Room) VALUES('{newCourse.Name}','{newCourse.Subject}', '{newCourse.TeacherId}','{newCourse.StartTime}', '{newCourse.EndTime}','{newCourse.Room}')";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query);
-            }
-        }
         public async Task<IEnumerable<Course>> GetAllCourses()
         {
             var query = "SELECT * FROM Course";
@@ -46,7 +37,40 @@ namespace Lms.Daos
                 return courses;
             }
         }
+        public async Task<Course> CreateCourse(CourseRequestDto newCourse)
+        {
+            var query = "INSERT INTO Course(Name, Subject, TeacherId, StartTime, EndTime, Room)" +
+                " OUTPUT INSERTED.Id VALUES(@Name, @Subject, @TeacherId, @StartTime, @EndTime, @Room)";
 
+            var parameters = new
+            {
+                Name = newCourse.Name,
+                Subject = newCourse.Subject,
+                TeacherId = newCourse.TeacherId,
+                StartTime = newCourse.StartTime,
+                EndTime = newCourse.EndTime,
+                Room = newCourse.Room
+            };
+
+            using (var connection = _context.CreateConnection())
+            {
+                var id = await connection.QuerySingleAsync<Guid>(query, parameters);
+
+                var createdCourse = new Course
+                {
+                    Id = id,
+                    Name = newCourse.Name,
+                    Subject = newCourse.Subject,
+                    TeacherId = newCourse.TeacherId,
+                    StartTime = newCourse.StartTime,
+                    EndTime = newCourse.EndTime,
+                    Room = newCourse.Room
+                };
+
+                return createdCourse;
+                //await connection.ExecuteAsync(query, parameters);
+            }
+        }
 
         public async Task DeleteCourseById(Guid id)
         {
@@ -85,7 +109,6 @@ namespace Lms.Daos
                 {
                     return null;
                 }
-
                 return roster.ToList();
             }
         }

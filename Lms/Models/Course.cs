@@ -25,5 +25,6 @@ namespace Lms.Models
         public DateTime? EndTime { get; set; }
 
         public string Room { get; set; }
+
     }
 }

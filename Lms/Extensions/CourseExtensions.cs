@@ -21,6 +21,7 @@ namespace Lms.Extensions
                     TeacherId = course.TeacherId,
                     StartTime = course.StartTime,
                     EndTime = course.EndTime,
+                    Room = course.Room
                 };
             }
             return null;

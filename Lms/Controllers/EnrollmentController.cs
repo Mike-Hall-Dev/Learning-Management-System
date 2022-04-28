@@ -18,6 +18,11 @@ namespace Lms.Controllers
             _enrollmentDao = enrollmentDao;
         }
 
+        /// <summary>
+        /// Is this working??
+        /// </summary>
+        /// <returns></returns>
+  
         [HttpPost]
         [Route("enrollments")]
         public async Task<IActionResult> CreateNewEnrollment(EnrollmentRequestDto newEnrollment)
@@ -33,6 +38,12 @@ namespace Lms.Controllers
             }
         }
 
+        /// <summary>
+        /// Hell yeah
+        /// </summary>
+        /// <param name="updateRequest"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPatch]
         [Route("enrollments/{id}")]
         public async Task<IActionResult> UpdateEnrollmentActiveStatus(EnrollmentRequestUpdateStatusDto updateRequest, [FromRoute] Guid id)

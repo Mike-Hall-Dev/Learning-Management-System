@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Lms</name>
+    </assembly>
+    <members>
+        <member name="M:Lms.Controllers.EnrollmentController.CreateNewEnrollment(Lms.Models.EnrollmentRequestDto)">
+            <summary>
+            Is this working??
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lms.Controllers.EnrollmentController.UpdateEnrollmentActiveStatus(Lms.Models.EnrollmentRequestUpdateStatusDto,System.Guid)">
+            <summary>
+            Hell yeah
+            </summary>
+            <param name="updateRequest"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

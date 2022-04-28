@@ -68,7 +68,6 @@ namespace Lms.Daos
                 };
 
                 return createdCourse;
-                //await connection.ExecuteAsync(query, parameters);
             }
         }
 

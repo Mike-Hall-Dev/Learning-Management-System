@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,13 +37,27 @@ namespace Lms
             services.AddScoped<TeacherDao>();
             services.AddScoped<EnrollmentDao>();
 
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
-            {
+            //services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
+            //{
 
-                Title = "Learning Management System",
-                Description = "The ultimate tool for all your learning needs",
-                Version = "v1"
-            }));
+            //    Title = "Learning Management System",
+            //    Description = "The ultimate tool for all your learning needs",
+            //    Version = "v1"
+            //}));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Learning Management System",
+                        Description = "The ultimate tool for all your learning needs",
+                        Version = "v1"
+                    }
+               );
+                var filePath = Path.Combine(AppContext.BaseDirectory, "Lms.xml");
+                c.IncludeXmlComments(filePath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -37,7 +37,7 @@ namespace Lms.Controllers
         }
 
         [HttpGet]
-        [Route("courses/{id}")]
+        [Route("courses/{id}", Name="GetCourseById")]
         public async Task<IActionResult> GetCourseById([FromRoute] Guid id)
         {
             try
@@ -85,9 +85,10 @@ namespace Lms.Controllers
         {
             try
             {
-
                 var createdCourse = await _courseDao.CreateCourse(newCourse);
-                return Ok(createdCourse.ConvertToDto());
+                var createdCourseDto = createdCourse.ConvertToDto();
+
+                return CreatedAtRoute(nameof(GetCourseById), new { id= createdCourseDto.Id }, createdCourseDto);
             }
             catch (Exception e)
             {
@@ -109,7 +110,7 @@ namespace Lms.Controllers
                 }
 
                 await _courseDao.DeleteCourseById(id);
-                return StatusCode(200);
+                return NoContent();
             }
             catch (Exception e)
             {

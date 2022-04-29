@@ -35,15 +35,6 @@ namespace Lms
             services.AddScoped<StudentDao>();
             services.AddScoped<CourseDao>();
             services.AddScoped<TeacherDao>();
-            services.AddScoped<EnrollmentDao>();
-
-            //services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
-            //{
-
-            //    Title = "Learning Management System",
-            //    Description = "The ultimate tool for all your learning needs",
-            //    Version = "v1"
-            //}));
 
             services.AddSwaggerGen(c =>
             {

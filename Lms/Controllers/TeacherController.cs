@@ -2,8 +2,6 @@
 using Lms.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Lms.Extensions;
 
@@ -18,6 +16,10 @@ namespace Lms.Controllers
             _teacherDao = teacherDao;
         }
 
+        /// <summary>
+        /// Not finished
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("teachers")]
         public async Task<IActionResult> GetAllTeachers()
@@ -34,6 +36,11 @@ namespace Lms.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Teacher by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("teachers/{id}")]
         public async Task<IActionResult> GetTeacherById([FromRoute] Guid id)
@@ -54,6 +61,11 @@ namespace Lms.Controllers
             }
         }
 
+        /// <summary>
+        /// Create a new Teacher
+        /// </summary>
+        /// <param name="newTeacher"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("teachers")]
         public async Task<IActionResult> CreateNewTeacher([FromBody] TeacherRequestDto newTeacher)
@@ -69,6 +81,11 @@ namespace Lms.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a Teacher by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("teachers/{id}")]
         public async Task<IActionResult> DeleteTeacherById([FromRoute] Guid id)
@@ -90,6 +107,12 @@ namespace Lms.Controllers
             }
         }
 
+        /// <summary>
+        /// Update a Teacher by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateRequest"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("teachers/{id}")]
         public async Task<IActionResult> UpdateTeacherById( [FromRoute] Guid id, [FromBody] TeacherRequestDto updateRequest)

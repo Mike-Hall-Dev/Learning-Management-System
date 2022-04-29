@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Lms.Dtos;
 using Lms.Models;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,24 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task<IEnumerable<Course>> GetAllCourses()
+        public async Task<IEnumerable<Course>> GetAllCourses(CourseSearchDto courseParams, bool hasQueryParams)
         {
-            var query = "SELECT * FROM Course";
+            var query = "SELECT TOP (10) * FROM [Course]";
+
+            if (hasQueryParams)
+            {
+                query += " WHERE 1=1";
+            }
+            if (courseParams.Name != null)
+            {
+                query += $" AND Name='{courseParams.Name}'";
+            }
+
+            if (courseParams.Subject != null)
+            {
+                query += $" AND Subject='{courseParams.Subject}'";
+            }
+
             using (var connection = _context.CreateConnection())
             {
                 var courses = await connection.QueryAsync<Course>(query);
@@ -70,6 +86,14 @@ namespace Lms.Daos
                 return createdCourse;
             }
         }
+        public async Task CreateEnrollment(Guid courseId, Guid studentId)
+        {
+            var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) OUTPUT Inserted.ID VALUES('{studentId}','{courseId}','1')";
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
 
         public async Task DeleteCourseById(Guid id)
         {
@@ -94,6 +118,26 @@ namespace Lms.Daos
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query);
+            }
+        }
+
+        public async Task UpdateEnrollmentActiveStatusById(Guid courseId, Guid studentId)
+        {
+            var query = $"UPDATE Enrollment SET Active ='0' WHERE CourseId = '{courseId}' AND StudentId = '{studentId}'";
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
+        public async Task<Enrollment> VerifyEnrollment(Guid courseId, Guid studentId)
+        {
+            var query = $"SELECT * FROM Enrollment WHERE CourseId = '{courseId}' AND StudentId = '{studentId}' AND Active = 1";
+            using (var connection = _context.CreateConnection())
+            {
+                var enrollment = await connection.QueryFirstOrDefaultAsync<Enrollment>(query);
+
+                return enrollment;
             }
         }
 

@@ -3,8 +3,6 @@ using Lms.Models;
 using Lms.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lms.Controllers
@@ -18,7 +16,10 @@ namespace Lms.Controllers
         {
             _studentDao = studentDao;
         }
-
+        /// <summary>
+        /// Not finished
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("students")]
         public async Task<IActionResult> GetAllStudents()
@@ -34,7 +35,11 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
+        /// <summary>
+        /// Get student by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("students/{id}")]
         public async Task<IActionResult> GetStudentById([FromRoute] Guid id)
@@ -48,7 +53,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                return Ok(student.ConvertToDto());
+                return Ok(student);
 
             }
             catch (Exception e)
@@ -56,7 +61,12 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
+        /// <summary>
+        /// Get Enrollments by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("students/{id}/enrollments")]
         public async Task<IActionResult> GetEnrollmentsById([FromRoute] Guid id, [FromQuery] bool isActive)
@@ -79,7 +89,11 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
+        /// <summary>
+        /// Create a new Student
+        /// </summary>
+        /// <param name="newStudent"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("students")]
         public async Task<IActionResult> CreateNewStudent([FromBody] StudentRequestDto newStudent)
@@ -94,7 +108,12 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
+        
+        /// <summary>
+        /// Delete a student
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("students/{id}")]
         public async Task<IActionResult> DeleteStudentById([FromRoute] Guid id)
@@ -116,6 +135,12 @@ namespace Lms.Controllers
             }
         }
 
+        /// <summary>
+        /// Update a student by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updateRequest"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("students/{id}")]
         public async Task<IActionResult> UpdateStudentById([FromRoute] Guid id, [FromBody] StudentRequestDto updateRequest)

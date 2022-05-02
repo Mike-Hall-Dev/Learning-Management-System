@@ -17,16 +17,6 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task CreateStudent(Student newStudent)
-        {
-            var query = $"INSERT INTO Student(FirstName, MiddleInitial, LastName, Email) " +
-                $"VALUES('{newStudent.FirstName}','{newStudent.MiddleInitial}','{newStudent.LastName}','{newStudent.Email}')";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query);
-            }
-        }
-
         public async Task<IEnumerable<Student>> GetAllStudents()
         {
             var query = "SELECT * FROM Student";
@@ -48,31 +38,6 @@ namespace Lms.Daos
                 return student;
             }
         }
-
-        public async Task DeleteStudentById(Guid id)
-        {
-            var query = $"DELETE FROM Student WHERE Id = '{id}'";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query);
-            }
-        }
-
-        public async Task UpdateStudentById(Guid id, Student updateRequest)
-        {
-            var query = $"UPDATE Student SET " +
-                $"FirstName ='{updateRequest.FirstName}'," +
-                $"MiddleInitial ='{updateRequest.MiddleInitial}', " +
-                $"LastName ='{updateRequest.LastName}'," +
-                $"Email ='{updateRequest.Email}' " +
-                $"WHERE Id = '{id}'";
-
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query);
-            }
-        }
-
         public async Task<IEnumerable<Course>> GetEnrollmentsById(Guid id, bool isActive, bool hasQueryParam)
         {
             var query = $"SELECT Course.Id, Course.[Name], Course.[Subject], Course.TeacherId FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student on Student.Id=Enrollment.StudentId WHERE StudentId='{id}'";
@@ -98,5 +63,38 @@ namespace Lms.Daos
             }
         }
 
+        public async Task CreateStudent(StudentRequestDto newStudent)
+        {
+            var query = $"INSERT INTO Student(FirstName, MiddleInitial, LastName, Email) " +
+                $"VALUES('{newStudent.FirstName}','{newStudent.MiddleInitial}','{newStudent.LastName}','{newStudent.Email}')";
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
+
+        public async Task DeleteStudentById(Guid id)
+        {
+            var query = $"DELETE FROM Student WHERE Id = '{id}'";
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
+
+        public async Task UpdateStudentById(Guid id, StudentRequestDto updateRequest)
+        {
+            var query = $"UPDATE Student SET " +
+                $"FirstName ='{updateRequest.FirstName}'," +
+                $"MiddleInitial ='{updateRequest.MiddleInitial}', " +
+                $"LastName ='{updateRequest.LastName}'," +
+                $"Email ='{updateRequest.Email}' " +
+                $"WHERE Id = '{id}'";
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
     }
 }

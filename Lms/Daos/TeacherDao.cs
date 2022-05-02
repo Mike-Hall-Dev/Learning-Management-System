@@ -15,15 +15,6 @@ namespace Lms.Daos
         {
             _context = context;
         }
-
-        public async Task CreateTeacher(Teacher newTeacher)
-        {
-            var query = $"INSERT INTO Teacher(FirstName, MiddleInitial, LastName, Email) OUTPUT INSERTED.Id VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}')";
-            using (var connection = _context.CreateConnection())
-            {
-                await connection.ExecuteAsync(query);
-            }
-        }
         public async Task<IEnumerable<Teacher>> GetAllTeachers()
         {
             var query = "SELECT * FROM Teacher";
@@ -45,6 +36,14 @@ namespace Lms.Daos
                 return teacher;
             }
         }
+        public async Task CreateTeacher(TeacherRequestDto newTeacher)
+        {
+            var query = $"INSERT INTO Teacher(FirstName, MiddleInitial, LastName, Email) OUTPUT INSERTED.Id VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}')";
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
 
         public async Task DeleteTeacherById(Guid id)
         {
@@ -55,8 +54,7 @@ namespace Lms.Daos
             }
         }
 
-
-        public async Task UpdateTeacherById(Guid id, Teacher updateRequest)
+        public async Task UpdateTeacherById(Guid id, TeacherRequestDto updateRequest)
         {
             var query = $"UPDATE Teacher SET " +
                 $"FirstName ='{updateRequest.FirstName}'," +
@@ -70,6 +68,5 @@ namespace Lms.Daos
                 await connection.ExecuteAsync(query);
             }
         }
-
     }
 }

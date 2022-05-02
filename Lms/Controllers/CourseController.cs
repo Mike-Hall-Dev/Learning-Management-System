@@ -27,9 +27,9 @@ namespace Lms.Controllers
         {
             try
             {
-                bool hasQueryParam = Request.QueryString.HasValue;
+                bool hasQueryParams = Request.QueryString.HasValue;
 
-                var courses = await _courseDao.GetAllCourses(courseParams, hasQueryParam);
+                var courses = await _courseDao.GetCoursesWithOptionalParams(courseParams, hasQueryParams);
 
                 return Ok(courses.ConvertToDtoList());
             }
@@ -42,7 +42,7 @@ namespace Lms.Controllers
         /// <summary>
         /// Gets a course by Id
         /// </summary>
-        /// <param name="id">ID of a specific course</param>
+        /// <param name="id">ID for a specific course</param>
         [HttpGet]
         [Route("courses/{id}", Name = "GetCourseById")]
         public async Task<IActionResult> GetCourseById([FromRoute] Guid id)
@@ -68,14 +68,14 @@ namespace Lms.Controllers
         /// <summary>
         /// Gets a list of students enrolled in a course
         /// </summary>
-        /// <param name="id">ID of a specific course</param>
+        /// <param name="id">ID for a specific course</param>
         [HttpGet]
         [Route("courses/{id}/roster")]
         public async Task<IActionResult> GetClassRoster([FromRoute] Guid id)
         {
             try
             {
-                var roster = await _courseDao.GetActiveClassRosterById(id);
+                var roster = await _courseDao.GetRosterByCourseId(id);
 
                 if (roster == null)
                 {
@@ -115,8 +115,8 @@ namespace Lms.Controllers
         /// <summary>
         /// Creates a new active enrollment
         /// </summary>
-        /// <param name="courseId">ID of a specific course</param>
-        /// <param name="studentId">ID of a specific student</param>
+        /// <param name="courseId">ID for a specific course</param>
+        /// <param name="studentId">ID for a specific student</param>
         /// <responses>201</responses>
         [HttpPost]
         [Route("courses/{courseId}/enroll")]
@@ -136,11 +136,11 @@ namespace Lms.Controllers
         /// <summary>
         /// Sets a current enrollment to inactive
         /// </summary>
-        /// <param name="courseId">ID of a specific course</param>
-        /// <param name="studentId">ID of a specific student</param>
+        /// <param name="courseId">ID for a specific course</param>
+        /// <param name="studentId">ID for a specific student</param>
         [HttpPatch]
         [Route("courses/{courseId}/unenroll")]
-        public async Task<IActionResult> UpdateEnrollmentActiveStatus([FromRoute] Guid courseId, [FromBody] Guid studentId)
+        public async Task<IActionResult> UnenrollFromActive([FromRoute] Guid courseId, [FromBody] Guid studentId)
         {
             try
             {
@@ -150,7 +150,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _courseDao.UpdateEnrollmentActiveStatusById(courseId, studentId);
+                await _courseDao.UnenrollByCourseId(courseId, studentId);
                 return StatusCode(200);
 
             }
@@ -158,13 +158,12 @@ namespace Lms.Controllers
             {
                 return StatusCode(500, e.Message);
             }
-
         }
 
         /// <summary>
         /// Deletes a course by Id
         /// </summary>
-        /// <param name="id">ID of a specific course</param>
+        /// <param name="id">ID for a specific course</param>
         [HttpDelete]
         [Route("courses/{id}")]
         public async Task<IActionResult> DeleteCourseById([FromRoute] Guid id)
@@ -190,7 +189,7 @@ namespace Lms.Controllers
         /// <summary>
         /// Updates a course by Id
         /// </summary>
-        /// <param name="id">ID of a specific course</param>
+        /// <param name="id">ID for a specific course</param>
         /// <param name="updateRequest">JSON object with updated data for course</param>
         [HttpPut]
         [Route("courses/{id}")]
@@ -205,7 +204,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _courseDao.UpdateCourseById(id, updateRequest.ConvertToModel());
+                await _courseDao.UpdateCourseById(id, updateRequest);
                 return StatusCode(204);
 
             }

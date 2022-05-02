@@ -16,10 +16,10 @@ namespace Lms.Controllers
         {
             _studentDao = studentDao;
         }
+
         /// <summary>
         /// Not finished
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("students")]
         public async Task<IActionResult> GetAllStudents()
@@ -27,7 +27,6 @@ namespace Lms.Controllers
             try
             {
                 var students = await _studentDao.GetAllStudents();
-
                 return Ok(students.ConvertToDtoList());
             }
             catch (Exception e)
@@ -35,11 +34,11 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Get student by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID for a specific student</param>
         [HttpGet]
         [Route("students/{id}")]
         public async Task<IActionResult> GetStudentById([FromRoute] Guid id)
@@ -52,21 +51,20 @@ namespace Lms.Controllers
                 {
                     return StatusCode(404);
                 }
-
+                
                 return Ok(student);
-
             }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Get Enrollments by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="isActive"></param>
-        /// <returns></returns>
+        /// <param name="id">ID for a specific student</param>
+        /// <param name="isActive">Boolean to fetch either active or inactive enrollments</param>
         [HttpGet]
         [Route("students/{id}/enrollments")]
         public async Task<IActionResult> GetEnrollmentsById([FromRoute] Guid id, [FromQuery] bool isActive)
@@ -81,26 +79,26 @@ namespace Lms.Controllers
                 {
                     return StatusCode(404);
                 }
-                return Ok(enrollments.ConvertToDtoListForEnrollments());
 
+                return Ok(enrollments.ConvertToDtoListForEnrollments());
             }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Create a new Student
         /// </summary>
-        /// <param name="newStudent"></param>
-        /// <returns></returns>
+        /// <param name="newStudent">JSON object for creation of a new student</param>
         [HttpPost]
         [Route("students")]
         public async Task<IActionResult> CreateNewStudent([FromBody] StudentRequestDto newStudent)
         {
             try
             {
-                await _studentDao.CreateStudent(newStudent.ConvertToModel());
+                await _studentDao.CreateStudent(newStudent);
                 return StatusCode(201, newStudent);
             }
             catch (Exception e)
@@ -112,8 +110,7 @@ namespace Lms.Controllers
         /// <summary>
         /// Delete a student
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID for a specific student</param>
         [HttpDelete]
         [Route("students/{id}")]
         public async Task<IActionResult> DeleteStudentById([FromRoute] Guid id)
@@ -138,9 +135,8 @@ namespace Lms.Controllers
         /// <summary>
         /// Update a student by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="updateRequest"></param>
-        /// <returns></returns>
+        /// <param name="id">ID for a specific student</param>
+        /// <param name="updateRequest">JSON object with updated data for student</param>
         [HttpPut]
         [Route("students/{id}")]
         public async Task<IActionResult> UpdateStudentById([FromRoute] Guid id, [FromBody] StudentRequestDto updateRequest)
@@ -154,7 +150,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _studentDao.UpdateStudentById(id, updateRequest.ConvertToModel());
+                await _studentDao.UpdateStudentById(id, updateRequest);
                 return StatusCode(200);
             }
             catch (Exception e)

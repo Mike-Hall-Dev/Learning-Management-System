@@ -19,8 +19,6 @@ namespace Lms.Controllers
         /// <summary>
         /// Not finished
         /// </summary>
-        /// <returns></returns>
-
         [HttpGet]
         [Route("teachers")]
         public async Task<IActionResult> GetAllTeachers()
@@ -40,9 +38,7 @@ namespace Lms.Controllers
         /// <summary>
         /// Get Teacher by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-
+        /// <param name="id">ID for a specific teacher</param>
         [HttpGet]
         [Route("teachers/{id}")]
         public async Task<IActionResult> GetTeacherById([FromRoute] Guid id)
@@ -66,16 +62,14 @@ namespace Lms.Controllers
         /// <summary>
         /// Create a new Teacher
         /// </summary>
-        /// <param name="newTeacher"></param>
-        /// <returns></returns>
-       
+        /// <param name="newTeacher">JSON object for creation of a new teacher</param>
         [HttpPost]
         [Route("teachers")]
         public async Task<IActionResult> CreateNewTeacher([FromBody] TeacherRequestDto newTeacher)
         {
             try
             {
-                await _teacherDao.CreateTeacher(newTeacher.ConvertToModel());
+                await _teacherDao.CreateTeacher(newTeacher);
                 return StatusCode(201, newTeacher);
             }
             catch (Exception e)
@@ -87,9 +81,7 @@ namespace Lms.Controllers
         /// <summary>
         /// Delete a Teacher by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        
+        /// <param name="id">ID for a specific teacher</param>        
         [HttpDelete]
         [Route("teachers/{id}")]
         public async Task<IActionResult> DeleteTeacherById([FromRoute] Guid id)
@@ -114,10 +106,8 @@ namespace Lms.Controllers
         /// <summary>
         /// Update a Teacher by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="updateRequest"></param>
-        /// <returns></returns>
-        
+        /// <param name="id">ID for a specific teacher</param>
+        /// <param name="updateRequest">JSON object with updated data for teacher</param>        
         [HttpPut]
         [Route("teachers/{id}")]
         public async Task<IActionResult> UpdateTeacherById([FromRoute] Guid id, [FromBody] TeacherRequestDto updateRequest)
@@ -130,7 +120,7 @@ namespace Lms.Controllers
                     return StatusCode(404);
                 }
 
-                await _teacherDao.UpdateTeacherById(id, updateRequest.ConvertToModel());
+                await _teacherDao.UpdateTeacherById(id, updateRequest);
                 return StatusCode(200);
 
             }

@@ -1,10 +1,10 @@
 ﻿using Lms.Daos;
+using Lms.Dtos;
+using Lms.Extensions;
 using Lms.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Lms.Extensions;
-using Lms.Dtos;
 
 namespace Lms.Controllers
 {
@@ -17,10 +17,10 @@ namespace Lms.Controllers
         {
             _courseDao = courseDao;
         }
+
         /// <summary>
         /// Not finished
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("courses")]
         public async Task<IActionResult> GetAllCourses([FromQuery] CourseSearchDto courseParams)
@@ -38,11 +38,11 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Gets a course by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of a specific course</param>
         [HttpGet]
         [Route("courses/{id}", Name = "GetCourseById")]
         public async Task<IActionResult> GetCourseById([FromRoute] Guid id)
@@ -64,11 +64,11 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Gets a list of students enrolled in a course
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of a specific course</param>
         [HttpGet]
         [Route("courses/{id}/roster")]
         public async Task<IActionResult> GetClassRoster([FromRoute] Guid id)
@@ -89,12 +89,12 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Creates a new course
         /// </summary>
         /// <responses>201</responses>
-        /// <param name="newCourse"></param>
-        /// <returns></returns>
+        /// <param name="newCourse">JSON object for creation of a new course</param>
         [HttpPost]
         [Route("courses")]
         public async Task<IActionResult> CreateNewCourse([FromBody] CourseRequestDto newCourse)
@@ -111,13 +111,13 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Creates a new active enrollment
         /// </summary>
-        /// <param name="courseId"></param>
-        /// <param name="studentId"></param>
+        /// <param name="courseId">ID of a specific course</param>
+        /// <param name="studentId">ID of a specific student</param>
         /// <responses>201</responses>
-        /// <returns></returns>
         [HttpPost]
         [Route("courses/{courseId}/enroll")]
         public async Task<IActionResult> CreateNewEnrollment([FromRoute] Guid courseId, [FromBody] Guid studentId)
@@ -132,14 +132,14 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Sets a current enrollment to inactive
         /// </summary>
-        /// <param name="courseId"></param>
-        /// <param name="studentId"></param>
-        /// <returns></returns>
+        /// <param name="courseId">ID of a specific course</param>
+        /// <param name="studentId">ID of a specific student</param>
         [HttpPatch]
-        [Route("enrollments/{courseId}/unenroll")]
+        [Route("courses/{courseId}/unenroll")]
         public async Task<IActionResult> UpdateEnrollmentActiveStatus([FromRoute] Guid courseId, [FromBody] Guid studentId)
         {
             try
@@ -160,11 +160,11 @@ namespace Lms.Controllers
             }
 
         }
+
         /// <summary>
         /// Deletes a course by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of a specific course</param>
         [HttpDelete]
         [Route("courses/{id}")]
         public async Task<IActionResult> DeleteCourseById([FromRoute] Guid id)
@@ -186,12 +186,12 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
         /// <summary>
         /// Updates a course by Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="updateRequest"></param>
-        /// <returns></returns>
+        /// <param name="id">ID of a specific course</param>
+        /// <param name="updateRequest">JSON object with updated data for course</param>
         [HttpPut]
         [Route("courses/{id}")]
         public async Task<IActionResult> UpdateCourseById([FromRoute] Guid id, CourseRequestDto updateRequest)

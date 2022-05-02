@@ -1,6 +1,6 @@
 ﻿using Lms.Daos;
-using Lms.Models;
 using Lms.Extensions;
+using Lms.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -108,7 +108,7 @@ namespace Lms.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-        
+
         /// <summary>
         /// Delete a student
         /// </summary>

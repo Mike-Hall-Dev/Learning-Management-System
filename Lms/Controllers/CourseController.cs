@@ -19,7 +19,7 @@ namespace Lms.Controllers
         }
 
         /// <summary>
-        /// Not finished
+        /// Gets courses with optional query params. Returns max of 25 courses. 
         /// </summary>
         [HttpGet]
         [Route("courses")]
@@ -60,7 +60,6 @@ namespace Lms.Controllers
                 }
 
                 return Ok(course.ConvertToDto());
-
             }
             catch (Exception e)
             {
@@ -84,8 +83,8 @@ namespace Lms.Controllers
                 {
                     return StatusCode(404);
                 }
-                return Ok(roster.ConvertToDtoList());
 
+                return Ok(roster.ConvertToDtoList());
             }
             catch (Exception e)
             {
@@ -155,7 +154,6 @@ namespace Lms.Controllers
 
                 await _courseDao.UnenrollByCourseId(courseId, studentId);
                 return StatusCode(200);
-
             }
             catch (Exception e)
             {
@@ -209,7 +207,6 @@ namespace Lms.Controllers
 
                 await _courseDao.UpdateCourseById(id, updateRequest);
                 return StatusCode(204);
-
             }
             catch (Exception e)
             {

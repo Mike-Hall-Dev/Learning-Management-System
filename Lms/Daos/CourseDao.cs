@@ -19,7 +19,7 @@ namespace Lms.Daos
 
         public async Task<IEnumerable<Course>> GetCoursesWithOptionalParams(CourseSearchDto courseParams)
         {
-            var query = "SELECT TOP (10) * FROM Course";
+            var query = "SELECT TOP (25) * FROM Course";
             var conditions = new List<string>();
 
             if (courseParams.Name != null)

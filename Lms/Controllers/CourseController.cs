@@ -27,9 +27,12 @@ namespace Lms.Controllers
         {
             try
             {
-                bool hasQueryParams = Request.QueryString.HasValue;
+                var courses = await _courseDao.GetCoursesWithOptionalParams(courseParams);
 
-                var courses = await _courseDao.GetCoursesWithOptionalParams(courseParams, hasQueryParams);
+                if (courses == null)
+                {
+                    return StatusCode(404);
+                }
 
                 return Ok(courses.ConvertToDtoList());
             }

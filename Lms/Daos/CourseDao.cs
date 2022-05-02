@@ -17,27 +17,40 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task<IEnumerable<Course>> GetCoursesWithOptionalParams(CourseSearchDto courseParams, bool hasQueryParams)
+        public async Task<IEnumerable<Course>> GetCoursesWithOptionalParams(CourseSearchDto courseParams)
         {
-            var query = "SELECT TOP (10) * FROM [Course]";
+            var query = "SELECT TOP (10) * FROM Course";
+            var conditions = new List<string>();
 
-            if (hasQueryParams)
-            {
-                query += " WHERE 1=1";
-            }
             if (courseParams.Name != null)
             {
-                query += $" AND Name='{courseParams.Name}'";
+                conditions.Add("Name=@Name");
             }
 
             if (courseParams.Subject != null)
             {
-                query += $" AND Subject='{courseParams.Subject}'";
+                conditions.Add("Subject=@Subject");
             }
+
+            if (conditions.Any())
+            {
+                query += " WHERE " + string.Join(" AND ", conditions);
+            }         
+
+            var parameters = new
+            {
+                Name = courseParams.Name,
+                Subject = courseParams.Subject
+            };
 
             using (var connection = _context.CreateConnection())
             {
-                var courses = await connection.QueryAsync<Course>(query);
+                var courses = await connection.QueryAsync<Course>(query, parameters);
+
+                if (courses.Count() == 0)
+                {
+                    return null;
+                }
 
                 return courses.ToList();
             }

@@ -1,6 +1,6 @@
 ﻿namespace Lms.Dtos
 {
-    public class CourseSearchDto
+    public class CourseRequestForParamsDto
     {
         public string Name { get; set; }
         public string Subject { get; set; }

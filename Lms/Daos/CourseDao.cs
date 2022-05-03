@@ -17,7 +17,7 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task<IEnumerable<Course>> GetCoursesWithOptionalParams(CourseSearchDto courseParams)
+        public async Task<IEnumerable<Course>> GetCoursesWithOptionalParams(CourseRequestForParamsDto courseParams)
         {
             var query = "SELECT TOP (25) * FROM Course";
             var conditions = new List<string>();
@@ -58,25 +58,38 @@ namespace Lms.Daos
 
         public async Task<Course> GetCourseById(Guid id)
         {
-            var query = $"SELECT * FROM Course WHERE Id = '{id}'";
+            var query = $"SELECT * FROM Course WHERE Id=@Id";
+            var parameters = new
+            {
+                Id = id
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                var courses = await connection.QueryFirstOrDefaultAsync<Course>(query);
+                var courses = await connection.QueryFirstOrDefaultAsync<Course>(query, parameters);
 
                 return courses;
             }
         }
         public async Task<IEnumerable<Student>> GetRosterByCourseId(Guid id)
         {
-            var query = $"SELECT  Student.Id, Student.FirstName, Student.MiddleInitial, Student.LastName, Student.Email FROM Course JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student ON Student.Id=Enrollment.StudentId WHERE Course.Id='{id}' AND Active=1";
+            var query = $"SELECT  Student.Id, Student.FirstName, Student.MiddleInitial, Student.LastName, Student.Email FROM Course " +
+                $"JOIN Enrollment ON Enrollment.CourseId=Course.Id JOIN Student ON Student.Id=Enrollment.StudentId WHERE Course.Id=@Id AND Active=1";
+            
+            var parameters = new
+            {
+                Id = id
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                var roster = await connection.QueryAsync<Student>(query);
+                var roster = await connection.QueryAsync<Student>(query, parameters);
 
                 if (roster.Count() == 0)
                 {
                     return null;
                 }
+
                 return roster.ToList();
             }
         }
@@ -117,29 +130,47 @@ namespace Lms.Daos
 
         public async Task CreateEnrollment(Guid courseId, Guid studentId)
         {
-            var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) OUTPUT Inserted.ID VALUES('{studentId}','{courseId}','1')";
+            var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) VALUES(@StudentId, @CourseId,1)";
+            var parameters = new
+            {
+                CourseId = courseId,
+                StudentId = studentId               
+            };
+            //var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) OUTPUT Inserted.ID VALUES('{studentId}','{courseId}','1')";
+
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query,parameters);
             }
         }
 
         public async Task UnenrollByCourseId(Guid courseId, Guid studentId)
         {
-            var query = $"UPDATE Enrollment SET Active ='0' WHERE CourseId = '{courseId}' AND StudentId = '{studentId}'";
+            var query = $"UPDATE Enrollment SET Active='0' WHERE CourseId=@CourseId AND StudentId=@StudentId";
+            var parameters = new
+            {
+                CourseId = courseId,
+                StudentId = studentId
+            };
 
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query, parameters);
             }
         }
 
-        public async Task<Enrollment> VerifyEnrollment(Guid courseId, Guid studentId)
+        public async Task<Enrollment> CheckForExistingActiveEnrollment(Guid courseId, Guid studentId)
         {
-            var query = $"SELECT * FROM Enrollment WHERE CourseId = '{courseId}' AND StudentId = '{studentId}' AND Active = 1";
+            var query = $"SELECT * FROM Enrollment WHERE CourseId=@CourseId AND StudentId=@StudentId AND Active = 1";
+            var parameters = new
+            {
+                CourseId = courseId,
+                StudentId = studentId
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                var enrollment = await connection.QueryFirstOrDefaultAsync<Enrollment>(query);
+                var enrollment = await connection.QueryFirstOrDefaultAsync<Enrollment>(query, parameters);
 
                 return enrollment;
             }
@@ -147,27 +178,45 @@ namespace Lms.Daos
 
         public async Task DeleteCourseById(Guid id)
         {
-            var query = $"DELETE FROM Course WHERE Id = '{id}'";
+            var query = $"DELETE FROM Course WHERE Id=@Id";
+            var parameters = new
+            {
+                Id = id
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query, parameters);
             }
         }
 
         public async Task UpdateCourseById(Guid id, CourseRequestDto updateRequest)
         {
-            var query = $"UPDATE Course SET " +
-                $"Name ='{updateRequest.Name}'," +
-                $"Subject = '{updateRequest.Subject}', " +
-                $"TeacherId = '{updateRequest.TeacherId}', " +
-                $"StartTime ='{updateRequest.StartTime}', " +
-                $"EndTime ='{updateRequest.EndTime}', " +
-                $"Room ='{updateRequest.Room}'" +
-                $"WHERE Id = '{id}'";
+            //var query = $"UPDATE Course SET " +
+            //    $"Name =@Name," +
+            //    $"Subject = '{updateRequest.Subject}', " +
+            //    $"TeacherId = '{updateRequest.TeacherId}', " +
+            //    $"StartTime ='{updateRequest.StartTime}', " +
+            //    $"EndTime ='{updateRequest.EndTime}', " +
+            //    $"Room ='{updateRequest.Room}'" +
+            //    $"WHERE Id = '{id}'";
+
+            var query = $"UPDATE Course SET Name=@Name, Subject=@Subject, TeacherId=@TeacherId, StartTime=@StartTime, EndTime@EndTime, Room=@Room WHERE Id=@Id";
+
+            var parameters = new
+            {
+                Name = updateRequest.Name,
+                Subject = updateRequest.Subject,
+                TeacherId = updateRequest.TeacherId,
+                StartTime = updateRequest.StartTime,
+                EndTime = updateRequest.EndTime,
+                Room = updateRequest.Room,
+                Id = id
+            };
 
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query, parameters);
             }
         }
     }

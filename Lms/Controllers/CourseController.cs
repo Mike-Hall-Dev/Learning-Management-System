@@ -23,7 +23,7 @@ namespace Lms.Controllers
         /// </summary>
         [HttpGet]
         [Route("courses")]
-        public async Task<IActionResult> GetAllCourses([FromQuery] CourseSearchDto courseParams)
+        public async Task<IActionResult> GetCoursesWithParams([FromQuery] CourseRequestForParamsDto courseParams)
         {
             try
             {
@@ -126,7 +126,15 @@ namespace Lms.Controllers
         {
             try
             {
+                var activeEnrollmentCheck = await _courseDao.CheckForExistingActiveEnrollment(courseId, studentId);
+
+                if (activeEnrollmentCheck != null)
+                {
+                    return ValidationProblem($"Student already has an active enrollment in this course.");
+                }
+
                 await _courseDao.CreateEnrollment(courseId, studentId);
+
                 return StatusCode(201);
             }
             catch (Exception e)
@@ -146,13 +154,15 @@ namespace Lms.Controllers
         {
             try
             {
-                var enrollment = await _courseDao.VerifyEnrollment(courseId, studentId);
+                var enrollment = await _courseDao.CheckForExistingActiveEnrollment(courseId, studentId);
+
                 if (enrollment == null)
                 {
                     return StatusCode(404);
                 }
 
                 await _courseDao.UnenrollByCourseId(courseId, studentId);
+
                 return StatusCode(200);
             }
             catch (Exception e)
@@ -179,6 +189,7 @@ namespace Lms.Controllers
                 }
 
                 await _courseDao.DeleteCourseById(id);
+
                 return NoContent();
             }
             catch (Exception e)
@@ -206,6 +217,7 @@ namespace Lms.Controllers
                 }
 
                 await _courseDao.UpdateCourseById(id, updateRequest);
+
                 return StatusCode(204);
             }
             catch (Exception e)

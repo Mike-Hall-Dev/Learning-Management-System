@@ -192,16 +192,8 @@ namespace Lms.Daos
 
         public async Task UpdateCourseById(Guid id, CourseRequestDto updateRequest)
         {
-            //var query = $"UPDATE Course SET " +
-            //    $"Name =@Name," +
-            //    $"Subject = '{updateRequest.Subject}', " +
-            //    $"TeacherId = '{updateRequest.TeacherId}', " +
-            //    $"StartTime ='{updateRequest.StartTime}', " +
-            //    $"EndTime ='{updateRequest.EndTime}', " +
-            //    $"Room ='{updateRequest.Room}'" +
-            //    $"WHERE Id = '{id}'";
 
-            var query = $"UPDATE Course SET Name=@Name, Subject=@Subject, TeacherId=@TeacherId, StartTime=@StartTime, EndTime@EndTime, Room=@Room WHERE Id=@Id";
+            var query = $"UPDATE Course SET Name=@Name, Subject=@Subject, TeacherId=@TeacherId, StartTime=@StartTime, EndTime=@EndTime, Room=@Room WHERE Id=@Id";
 
             var parameters = new
             {

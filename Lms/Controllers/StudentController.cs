@@ -61,7 +61,7 @@ namespace Lms.Controllers
         }
 
         /// <summary>
-        /// Get Enrollments by Id
+        /// Get Enrollments by student Id. Returns both active and inactive enrollments if query param not passed.
         /// </summary>
         /// <param name="id">ID for a specific student</param>
         /// <param name="isActive">Boolean to fetch either active or inactive enrollments</param>

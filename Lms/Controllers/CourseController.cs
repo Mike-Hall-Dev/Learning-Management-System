@@ -119,7 +119,6 @@ namespace Lms.Controllers
         /// </summary>
         /// <param name="courseId">ID for a specific course</param>
         /// <param name="studentId">ID for a specific student</param>
-        /// <responses>201</responses>
         [HttpPost]
         [Route("courses/{courseId}/enroll")]
         public async Task<IActionResult> CreateNewEnrollment([FromRoute] Guid courseId, [FromBody] Guid studentId)

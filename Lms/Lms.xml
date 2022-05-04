@@ -34,7 +34,6 @@
             </summary>
             <param name="courseId">ID for a specific course</param>
             <param name="studentId">ID for a specific student</param>
-            <responses>201</responses>
         </member>
         <member name="M:Lms.Controllers.CourseController.UnenrollFromActive(System.Guid,System.Guid)">
             <summary>

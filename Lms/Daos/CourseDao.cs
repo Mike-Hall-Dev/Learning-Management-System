@@ -59,6 +59,7 @@ namespace Lms.Daos
         public async Task<Course> GetCourseById(Guid id)
         {
             var query = $"SELECT * FROM Course WHERE Id=@Id";
+
             var parameters = new
             {
                 Id = id
@@ -131,12 +132,12 @@ namespace Lms.Daos
         public async Task CreateEnrollment(Guid courseId, Guid studentId)
         {
             var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) VALUES(@StudentId, @CourseId,1)";
+
             var parameters = new
             {
                 CourseId = courseId,
                 StudentId = studentId               
             };
-            //var query = $"INSERT INTO Enrollment (StudentId, CourseId, Active) OUTPUT Inserted.ID VALUES('{studentId}','{courseId}','1')";
 
             using (var connection = _context.CreateConnection())
             {
@@ -147,6 +148,7 @@ namespace Lms.Daos
         public async Task UnenrollByCourseId(Guid courseId, Guid studentId)
         {
             var query = $"UPDATE Enrollment SET Active='0' WHERE CourseId=@CourseId AND StudentId=@StudentId";
+
             var parameters = new
             {
                 CourseId = courseId,
@@ -162,6 +164,7 @@ namespace Lms.Daos
         public async Task<Enrollment> CheckForExistingActiveEnrollment(Guid courseId, Guid studentId)
         {
             var query = $"SELECT * FROM Enrollment WHERE CourseId=@CourseId AND StudentId=@StudentId AND Active = 1";
+
             var parameters = new
             {
                 CourseId = courseId,
@@ -179,6 +182,7 @@ namespace Lms.Daos
         public async Task DeleteCourseById(Guid id)
         {
             var query = $"DELETE FROM Course WHERE Id=@Id";
+
             var parameters = new
             {
                 Id = id

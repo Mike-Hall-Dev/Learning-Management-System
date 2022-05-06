@@ -55,9 +55,9 @@
             <param name="id">ID for a specific course</param>
             <param name="updateRequest">JSON object with updated data for course</param>
         </member>
-        <member name="M:Lms.Controllers.StudentController.GetAllStudents">
+        <member name="M:Lms.Controllers.StudentController.GetStudentsWithParams(Lms.Dtos.Request.StudentRequestForParams)">
             <summary>
-            Not finished
+            Gets students with optional query params. Returns max of 25 students. 
             </summary>
         </member>
         <member name="M:Lms.Controllers.StudentController.GetStudentById(System.Guid)">
@@ -68,7 +68,7 @@
         </member>
         <member name="M:Lms.Controllers.StudentController.GetEnrollmentsById(System.Guid,System.Boolean)">
             <summary>
-            Get Enrollments by Id
+            Get Enrollments by student Id. Returns both active and inactive enrollments if query param not passed.
             </summary>
             <param name="id">ID for a specific student</param>
             <param name="isActive">Boolean to fetch either active or inactive enrollments</param>
@@ -92,9 +92,9 @@
             <param name="id">ID for a specific student</param>
             <param name="updateRequest">JSON object with updated data for student</param>
         </member>
-        <member name="M:Lms.Controllers.TeacherController.GetAllTeachers">
+        <member name="M:Lms.Controllers.TeacherController.GetStudentsWithParams(Lms.Dtos.Request.TeacherRequestForParams)">
             <summary>
-            Not finished
+            Gets teachers with optional query params. Returns max of 25 teachers.
             </summary>
         </member>
         <member name="M:Lms.Controllers.TeacherController.GetTeacherById(System.Guid)">

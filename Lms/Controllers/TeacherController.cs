@@ -1,4 +1,5 @@
 ﻿using Lms.Daos;
+using Lms.Dtos.Request;
 using Lms.Extensions;
 using Lms.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,20 @@ namespace Lms.Controllers
         }
 
         /// <summary>
-        /// Not finished
+        /// Gets teachers with optional query params. Returns max of 25 teachers.
         /// </summary>
         [HttpGet]
         [Route("teachers")]
-        public async Task<IActionResult> GetAllTeachers()
+        public async Task<IActionResult> GetStudentsWithParams([FromQuery] TeacherRequestForParams teacherParams)
         {
             try
             {
-                var teachers = await _teacherDao.GetAllTeachers();
+                var teachers = await _teacherDao.GetStudentsWithOptionalParams(teacherParams);
+
+                if (teachers == null)
+                {
+                    return StatusCode(204);
+                }
 
                 return Ok(teachers.ConvertToDtoList());
             }

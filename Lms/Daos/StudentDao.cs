@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Lms.Dtos.Request;
 using Lms.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,14 +18,43 @@ namespace Lms.Daos
             _context = context;
         }
 
-        public async Task<IEnumerable<Student>> GetAllStudents()
+        public async Task<IEnumerable<Student>> GetStudentsWithOptionalParams(StudentRequestForParams studentParams)
         {
-            var query = "SELECT * FROM Student";
+
+            var query = "SELECT TOP (25) * FROM Student";
+            var conditions = new List<string>();
+
+            if (studentParams.FirstName != null)
+            {
+                conditions.Add("FirstName=@FirstName");
+            }
+
+            if (studentParams.LastName != null)
+            {
+                conditions.Add("LastName=@LastName");
+            }
+
+            if (conditions.Any())
+            {
+                query += " WHERE " + string.Join(" AND ", conditions);
+            }
+
+            var parameters = new
+            {
+                FirstName = studentParams.FirstName,
+                LastName = studentParams.LastName
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                var students = await connection.QueryAsync<Student>(query);
+                var students = await connection.QueryAsync<Student>(query, parameters);
 
-                return students;
+                if (students.Count() == 0)
+                {
+                    return null;
+                }
+
+                return students.ToList();
             }
         }
 

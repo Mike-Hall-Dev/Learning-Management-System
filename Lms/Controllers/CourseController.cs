@@ -31,7 +31,7 @@ namespace Lms.Controllers
 
                 if (courses == null)
                 {
-                    return StatusCode(404);
+                    return StatusCode(204);
                 }
 
                 return Ok(courses.ConvertToDtoList());
@@ -121,7 +121,7 @@ namespace Lms.Controllers
         /// <param name="studentId">ID for a specific student</param>
         [HttpPost]
         [Route("courses/{courseId}/enroll")]
-        public async Task<IActionResult> CreateNewEnrollment([FromRoute] Guid courseId, [FromBody] Guid studentId)
+        public async Task<IActionResult> CreateNewEnrollment([FromRoute] Guid courseId, [FromQuery] Guid studentId)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace Lms.Controllers
         /// <param name="studentId">ID for a specific student</param>
         [HttpPatch]
         [Route("courses/{courseId}/unenroll")]
-        public async Task<IActionResult> UnenrollFromActive([FromRoute] Guid courseId, [FromBody] Guid studentId)
+        public async Task<IActionResult> UnenrollFromActive([FromRoute] Guid courseId, [FromQuery] Guid studentId)
         {
             try
             {

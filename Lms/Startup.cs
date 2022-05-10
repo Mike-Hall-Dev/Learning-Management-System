@@ -23,7 +23,6 @@ namespace Lms
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddDbContext<LmsContext>(opt => opt.UseInMemoryDatabase("Lms"));
             //services.AddApiVersioning(opt => opt.ReportApiVersions = true);
             services.AddSingleton<DapperContext>();
             services.AddScoped<StudentDao>();

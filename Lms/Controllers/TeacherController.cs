@@ -46,7 +46,7 @@ namespace Lms.Controllers
         /// </summary>
         /// <param name="id">ID for a specific teacher</param>
         [HttpGet]
-        [Route("teachers/{id}")]
+        [Route("teachers/{id}", Name = "GetTeacherById")]
         public async Task<IActionResult> GetTeacherById([FromRoute] Guid id)
         {
             try
@@ -75,8 +75,10 @@ namespace Lms.Controllers
         {
             try
             {
-                await _teacherDao.CreateTeacher(newTeacher);
-                return StatusCode(201, newTeacher);
+                var createdTeacher = await _teacherDao.CreateTeacher(newTeacher);
+                var createdTeacherDto = createdTeacher.ConvertToDto();
+
+                return CreatedAtRoute(nameof(GetTeacherById), new { id = createdTeacherDto.Id }, createdTeacherDto);
             }
             catch (Exception e)
             {

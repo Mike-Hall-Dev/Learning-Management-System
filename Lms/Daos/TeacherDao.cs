@@ -58,44 +58,81 @@ namespace Lms.Daos
 
         public async Task<Teacher> GetTeacherById(Guid id)
         {
-            var query = $"SELECT * FROM Teacher WHERE Id = '{id}'";
+            var query = $"SELECT * FROM Teacher WHERE Id=@Id";
+
+            var parameters = new
+            {
+                Id = id
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                var teacher = await connection.QueryFirstOrDefaultAsync<Teacher>(query);
+                var teacher = await connection.QueryFirstOrDefaultAsync<Teacher>(query, parameters);
 
                 return teacher;
             }
         }
-        public async Task CreateTeacher(TeacherRequestDto newTeacher)
+        public async Task<Teacher> CreateTeacher(TeacherRequestDto newTeacher)
         {
-            var query = $"INSERT INTO Teacher(FirstName, MiddleInitial, LastName, Email) OUTPUT INSERTED.Id VALUES('{newTeacher.FirstName}','{newTeacher.MiddleInitial}','{newTeacher.LastName}','{newTeacher.Email}')";
+            var query = $"INSERT INTO Teacher(FirstName, MiddleInitial, LastName, Email)" +
+               $" OUTPUT INSERTED.Id VALUES(@FirstName, @MiddleInitial, @LastName, @Email)";
+
+            var parameters = new
+            {
+                FirstName = newTeacher.FirstName,
+                MiddleInitial = newTeacher.MiddleInitial,
+                LastName = newTeacher.LastName,
+                Email = newTeacher.Email
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                var id = await connection.QuerySingleAsync<Guid>(query, parameters);
+
+                var createdTeacher = new Teacher
+                {
+                    Id = id,
+                    FirstName = newTeacher.FirstName,
+                    MiddleInitial = newTeacher.MiddleInitial,
+                    LastName = newTeacher.LastName,
+                    Email = newTeacher.Email
+                };
+
+                return createdTeacher;
             }
         }
 
         public async Task DeleteTeacherById(Guid id)
         {
-            var query = $"DELETE FROM Teacher WHERE Id = '{id}'";
+            var query = $"DELETE FROM Teacher WHERE Id=@Id";
+
+            var parameters = new
+            {
+                Id = id
+            };
+
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query,parameters);
             }
         }
 
         public async Task UpdateTeacherById(Guid id, TeacherRequestDto updateRequest)
         {
-            var query = $"UPDATE Teacher SET " +
-                $"FirstName ='{updateRequest.FirstName}'," +
-                $"MiddleInitial ='{updateRequest.MiddleInitial}', " +
-                $"LastName ='{updateRequest.LastName}', " +
-                $"Email ='{updateRequest.Email}' " +
-                $"WHERE Id = '{id}'";
+            var query = $"UPDATE Teacher SET FirstName=@FirstName, MiddleInitial=@MiddleInitial, LastName=@LastName, Email=@Email WHERE Id=@Id";
+
+            var parameters = new
+            {
+                FirstName = updateRequest.FirstName,
+                MiddleInitial = updateRequest.MiddleInitial,
+                LastName = updateRequest.LastName,
+                Email = updateRequest.Email,
+                Id = id
+            };
 
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query);
+                await connection.ExecuteAsync(query, parameters);
             }
         }
     }

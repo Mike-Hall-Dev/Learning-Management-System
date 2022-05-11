@@ -134,7 +134,8 @@ namespace Lms.Controllers
                 }
 
                 await _studentDao.DeleteStudentById(id);
-                return StatusCode(204);
+
+                return NoContent();
             }
             catch (Exception e)
             {

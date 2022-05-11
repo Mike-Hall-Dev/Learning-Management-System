@@ -103,7 +103,8 @@ namespace Lms.Controllers
                 }
 
                 await _teacherDao.DeleteTeacherById(id);
-                return StatusCode(204);
+
+                return NoContent();
             }
             catch (Exception e)
             {

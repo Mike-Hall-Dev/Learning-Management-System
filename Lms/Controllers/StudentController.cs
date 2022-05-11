@@ -31,7 +31,7 @@ namespace Lms.Controllers
 
                 if (students == null)
                 {
-                    return StatusCode(204);
+                    return StatusCode(200, new { });
                 }
 
                 return Ok(students.ConvertToDtoList());
@@ -56,7 +56,7 @@ namespace Lms.Controllers
 
                 if (student == null)
                 {
-                    return StatusCode(404);
+                    return StatusCode(200, new { });
                 }
                 
                 return Ok(student);
@@ -84,7 +84,7 @@ namespace Lms.Controllers
 
                 if (enrollments == null)
                 {
-                    return StatusCode(404);
+                    return StatusCode(200, new { });
                 }
 
                 return Ok(enrollments.ConvertToDtoListForEnrollments());
@@ -130,7 +130,7 @@ namespace Lms.Controllers
 
                 if (student == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This student could not be found. No delete action has been taken.");
                 }
 
                 await _studentDao.DeleteStudentById(id);
@@ -157,7 +157,7 @@ namespace Lms.Controllers
 
                 if (student == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This student could not be found. No update action has been taken.");
                 }
 
                 await _studentDao.UpdateStudentById(id, updateRequest);

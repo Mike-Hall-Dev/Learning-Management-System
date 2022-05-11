@@ -31,7 +31,7 @@ namespace Lms.Controllers
 
                 if (courses == null)
                 {
-                    return StatusCode(204);
+                    return StatusCode(200, new { });
                 }
 
                 return Ok(courses.ConvertToDtoList());
@@ -56,7 +56,7 @@ namespace Lms.Controllers
 
                 if (course == null)
                 {
-                    return StatusCode(404);
+                    return StatusCode(200, new { });
                 }
 
                 return Ok(course.ConvertToDto());
@@ -81,7 +81,7 @@ namespace Lms.Controllers
 
                 if (roster == null)
                 {
-                    return StatusCode(404);
+                    return StatusCode(200, new { });
                 }
 
                 return Ok(roster.ConvertToDtoList());
@@ -157,7 +157,7 @@ namespace Lms.Controllers
 
                 if (enrollment == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This enrollment does not exist.");
                 }
 
                 await _courseDao.UnenrollByCourseId(courseId, studentId);
@@ -184,7 +184,7 @@ namespace Lms.Controllers
 
                 if (course == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This course could not be found. No delete action has been taken.");
                 }
 
                 await _courseDao.DeleteCourseById(id);
@@ -217,7 +217,7 @@ namespace Lms.Controllers
 
                 await _courseDao.UpdateCourseById(id, updateRequest);
 
-                return StatusCode(204);
+                return StatusCode(200);
             }
             catch (Exception e)
             {

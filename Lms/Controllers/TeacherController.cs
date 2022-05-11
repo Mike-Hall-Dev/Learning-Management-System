@@ -30,7 +30,7 @@ namespace Lms.Controllers
 
                 if (teachers == null)
                 {
-                    return StatusCode(204);
+                    return StatusCode(200, new { });
                 }
 
                 return Ok(teachers.ConvertToDtoList());
@@ -54,7 +54,7 @@ namespace Lms.Controllers
                 var teacher = await _teacherDao.GetTeacherById(id);
                 if (teacher == null)
                 {
-                    return StatusCode(404);
+                    return StatusCode(200, new { });
                 }
                 return Ok(teacher.ConvertToDto());
 
@@ -99,7 +99,7 @@ namespace Lms.Controllers
                 var teacher = await _teacherDao.GetTeacherById(id);
                 if (teacher == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This teacher could not be found. No delete action has been taken.");
                 }
 
                 await _teacherDao.DeleteTeacherById(id);
@@ -125,7 +125,7 @@ namespace Lms.Controllers
                 var teacher = await _teacherDao.GetTeacherById(id);
                 if (teacher == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This teacher could not be found. No update action has been taken.");
                 }
 
                 await _teacherDao.UpdateTeacherById(id, updateRequest);

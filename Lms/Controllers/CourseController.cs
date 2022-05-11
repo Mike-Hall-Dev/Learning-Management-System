@@ -212,7 +212,7 @@ namespace Lms.Controllers
 
                 if (course == null)
                 {
-                    return StatusCode(404);
+                    return ValidationProblem($"This course could not be found. No update action has been taken.");
                 }
 
                 await _courseDao.UpdateCourseById(id, updateRequest);
